@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using TMPro;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -21,6 +22,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] private string friendHungUpMessage = "You hung up on your friend! Friendship damaged!";
     [SerializeField] private string friendCompletedMessage = "Nice chat with your friend! They're happy!";
     
+    [Header("Score Tracking")]
+    [SerializeField] private TMP_Text leftCallCountText;
+    [SerializeField] private TMP_Text rightCallCountText;
+	
+	[Header("Score Display")]
+	[SerializeField] private TMP_Text leftScoreText;
+	[SerializeField] private TMP_Text rightScoreText;
+
+	
+	private int callCount = 0;
+    private float playerMoney;
+
     private int livesRemaining;
     private float currentCallTime;
     private float resultCountdown;
@@ -33,14 +46,61 @@ public class GameManager : MonoBehaviour
         livesRemaining = maxLives;
         panelManager.UpdateLives(livesRemaining);
         
+		// Generate random money amount
+        GeneratePlayerMoney();
+
         // Subscribe to input events
         inputManager.OnHangUpTriggered += HangUpCall;
         inputManager.OnPickUpTriggered += StartCall;
         
+		// Reset call count for new game
+        callCount = 0;
+        UpdateCallCountDisplay();
+
         // Show initial incoming call screen
         ShowIncomingCall();
     }
+	
+	private void UpdateScoreDisplay()
+	{
+    	string scoreText = "No.Call: " + callCount;
+    	
+    	if (leftScoreText != null)
+        	leftScoreText.text = scoreText;
+        
+    	if (rightScoreText != null)
+        	rightScoreText.text = scoreText;
+	}
     
+	private void GeneratePlayerMoney()
+    {
+        // Decide if we generate a small or extremely large amount (90% small, 10% large)
+        if (Random.value > 0.9f)
+        {
+            // Generate a huge amount (hundreds of millions to billions)
+            playerMoney = Random.Range(100000000f, 3000000000f);
+        }
+        else
+        {
+            // Generate a modest amount ($10 to $1000)
+            playerMoney = Random.Range(10f, 1000f);
+            
+            // Add cents for realism
+            playerMoney += Random.Range(0.01f, 0.99f);
+        }
+        
+        Debug.Log($"Player starting with ${playerMoney:F2}");
+    }
+
+	private void UpdateCallCountDisplay()
+    {
+        if (leftCallCountText != null)
+            leftCallCountText.text = "Calls: " + callCount;
+            
+        if (rightCallCountText != null)
+            rightCallCountText.text = "Calls: " + callCount;
+    }
+	
     private void OnDestroy()
     {
         // Unsubscribe from events
@@ -50,6 +110,7 @@ public class GameManager : MonoBehaviour
             inputManager.OnPickUpTriggered -= StartCall;
         }
     }
+	
     
     private void Update()
     {
@@ -73,16 +134,32 @@ public class GameManager : MonoBehaviour
         if (resultActive)
         {
             resultCountdown -= Time.deltaTime;
-            
-            // Update countdown display
-            string countdownText = "Next call in " + Mathf.CeilToInt(resultCountdown) + "...";
-            panelManager.UpdateResultCountdownText(countdownText);
-            
-            // Move to next call when countdown completes
-            if (resultCountdown <= 0)
+    
+            // Different message if player has lost all lives
+            if (livesRemaining <= 0)
             {
-                resultActive = false;
-                ShowIncomingCall();
+                string countdownText = "Face your score in " + Mathf.CeilToInt(resultCountdown) + "...";
+                panelManager.UpdateResultCountdownText(countdownText);
+        
+                // Load game over scene when countdown completes
+                if (resultCountdown <= 0)
+                {
+                    resultActive = false;
+                    SceneManager.LoadScene(gameOverSceneName);
+                }
+            }
+            else
+            {
+                // Regular countdown
+                string countdownText = "Next call in " + Mathf.CeilToInt(resultCountdown) + "...";
+                panelManager.UpdateResultCountdownText(countdownText);
+        
+                // Move to next call when countdown completes
+                if (resultCountdown <= 0)
+                {
+                    resultActive = false;
+                    ShowIncomingCall();
+                }
             }
         }
     }
@@ -90,6 +167,11 @@ public class GameManager : MonoBehaviour
     // Show incoming call screen and prepare next call
     private void ShowIncomingCall()
     {
+		// Increment call counter
+        callCount++;
+        UpdateCallCountDisplay();
+		UpdateScoreDisplay();
+		
         // Generate new face content for this call
         faceManager.PrepareCall();
         
@@ -155,12 +237,12 @@ public class GameManager : MonoBehaviour
         resultActive = true;
         resultCountdown = resultDuration;
         
-        // Check for game over
+        // Save player's data for game over screen if they've lost
         if (livesRemaining <= 0)
         {
-            resultActive = false;
-            StartCoroutine(GameOver());
-            return;
+            PlayerPrefs.SetInt("CallCount", callCount);
+            PlayerPrefs.SetFloat("MoneyLost", playerMoney);
+            PlayerPrefs.Save();
         }
     }
     
@@ -197,19 +279,24 @@ public class GameManager : MonoBehaviour
         resultActive = true;
         resultCountdown = resultDuration;
         
-        // Check for game over
+        // Save player's data for game over screen if they've lost
         if (livesRemaining <= 0)
         {
-            resultActive = false;
-            StartCoroutine(GameOver());
-            return;
+            PlayerPrefs.SetInt("CallCount", callCount);
+            PlayerPrefs.SetFloat("MoneyLost", playerMoney);
+            PlayerPrefs.Save();
         }
     }
     
     // Game over sequence
     private IEnumerator GameOver()
     {
-        yield return new WaitForSeconds(3f);
+		// Save the player's data for the game over screen
+        PlayerPrefs.SetInt("CallCount", callCount);
+        PlayerPrefs.SetFloat("MoneyLost", playerMoney);
+        PlayerPrefs.Save();
+		
+        yield return new WaitForSeconds(5f);
         SceneManager.LoadScene(gameOverSceneName);
     }
 }
