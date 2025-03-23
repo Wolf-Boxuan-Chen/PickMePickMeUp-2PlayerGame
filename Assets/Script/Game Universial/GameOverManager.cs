@@ -62,14 +62,14 @@ public class GameOverManager : MonoBehaviour
     private void DisplayGameOverInfo()
     {
         // Format money in bold and italic
-        string moneyFormattedText = "<b><i>$" + moneyLost.ToString("F2") + "</i></b>";
+        string moneyFormattedText = "<b>$" + moneyLost.ToString("F2") + "</b>";
         
         // Format call count in red and italic
-        string callCountFormattedText = "<color=red><i>" + currentCallCount.ToString() + "</i></color>";
+        string callCountFormattedText = "<color=red>" + currentCallCount.ToString() + "</color>";
         
         // Create the complete game over message with rich text formatting
-        string gameOverMessage = "You lost your one and only friend and all your money—" + 
-                                moneyFormattedText + "—and are declared broke after " + 
+        string gameOverMessage = "You lost your one and only friend and all your money— " + 
+                                moneyFormattedText + " —and are declared broke after " + 
                                 callCountFormattedText + " calls.";
         
         SetDualText(gameOverText, gameOverMessage);
@@ -77,7 +77,7 @@ public class GameOverManager : MonoBehaviour
         // Show ranking with proper format
         List<ScoreEntry> allScores = GetAllScores();
         int rank = DetermineRank(currentCallCount, allScores);
-        string rankText = $"You:Rank {rank}/{allScores.Count}";
+        string rankText = $"Your Rank: {rank}/{allScores.Count}";
         SetDualText(rankingText, rankText);
         
         // Show top scores with arrow under player's score

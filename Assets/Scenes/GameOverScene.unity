@@ -208,7 +208,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "(Reminder: It\u2019s just a game.)"
+  m_text: "(reminder: It\u2019s just a game.)"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5e0a5d49ec66c45f68f0664739ab060d, type: 2}
   m_sharedMaterial: {fileID: -7780246553126378857, guid: 5e0a5d49ec66c45f68f0664739ab060d, type: 2}
@@ -245,7 +245,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: -5.5
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -680,7 +680,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 1024
   m_textAlignment: 65535
-  m_characterSpacing: -4.5
+  m_characterSpacing: -5.5
   m_wordSpacing: 0
   m_lineSpacing: 7.5
   m_lineSpacingMax: 0
@@ -1704,7 +1704,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: -4.5
+  m_characterSpacing: -5.5
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

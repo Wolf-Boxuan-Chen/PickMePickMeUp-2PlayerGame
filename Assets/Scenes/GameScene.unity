@@ -775,7 +775,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 234.00002, y: 175}
+  m_AnchoredPosition: {x: 234.00002, y: 176}
   m_SizeDelta: {x: 34, y: 34}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &450947983
@@ -2568,7 +2568,7 @@ MonoBehaviour:
   faceManager: {fileID: 997436248}
   panelManager: {fileID: 997436250}
   inputManager: {fileID: 997436249}
-  callDuration: 20
+  callDuration: 25
   resultDuration: 5
   maxLives: 2
   gameOverSceneName: GameOverScene
@@ -5087,7 +5087,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 282, y: 44}
+  m_AnchoredPosition: {x: 282, y: 35}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1812605909
