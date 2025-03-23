@@ -127,4 +127,5 @@ public class InputManager : MonoBehaviour
         inputEnabled = enable;
         Debug.Log($"Input processing {(enable ? "enabled" : "disabled")}");
     }
+    
 }
