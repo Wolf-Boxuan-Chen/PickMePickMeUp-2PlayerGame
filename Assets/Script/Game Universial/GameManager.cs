@@ -9,10 +9,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private FaceManager faceManager;
     [SerializeField] private PanelManager panelManager;
     [SerializeField] private InputManager inputManager;
+    [SerializeField] private FaceGenerator faceGenerator; // New reference
     
     [Header("Game Settings")]
     [SerializeField] private float callDuration = 20f;
-    [SerializeField] private float resultDuration = 5f; // Time to show result before next call
+    [SerializeField] private float resultDuration = 5f;
     [SerializeField] private int maxLives = 2;
     [SerializeField] private string gameOverSceneName = "GameOverScene";
     
@@ -25,15 +26,14 @@ public class GameManager : MonoBehaviour
     [Header("Score Tracking")]
     [SerializeField] private TMP_Text leftCallCountText;
     [SerializeField] private TMP_Text rightCallCountText;
-	
-	[Header("Score Display")]
-	[SerializeField] private TMP_Text leftScoreText;
-	[SerializeField] private TMP_Text rightScoreText;
-
-	
-	private int callCount = 0;
+    
+    [Header("Score Display")]
+    [SerializeField] private TMP_Text leftScoreText;
+    [SerializeField] private TMP_Text rightScoreText;
+    
+    private int callCount = 0;
     private float playerMoney;
-
+    
     private int livesRemaining;
     private float currentCallTime;
     private float resultCountdown;
@@ -46,61 +46,31 @@ public class GameManager : MonoBehaviour
         livesRemaining = maxLives;
         panelManager.UpdateLives(livesRemaining);
         
-		// Generate random money amount
+        // Generate random money amount
         GeneratePlayerMoney();
-
+        
         // Subscribe to input events
         inputManager.OnHangUpTriggered += HangUpCall;
         inputManager.OnPickUpTriggered += StartCall;
         
-		// Reset call count for new game
+        // Reset call count for new game
         callCount = 0;
         UpdateCallCountDisplay();
-
-        // Show initial incoming call screen
-        ShowIncomingCall();
-    }
-	
-	private void UpdateScoreDisplay()
-	{
-    	string scoreText = "No.Call: " + callCount;
-    	
-    	if (leftScoreText != null)
-        	leftScoreText.text = scoreText;
         
-    	if (rightScoreText != null)
-        	rightScoreText.text = scoreText;
-	}
-    
-	private void GeneratePlayerMoney()
-    {
-        // Decide if we generate a small or extremely large amount (90% small, 10% large)
-        if (Random.value > 0.9f)
+        // Initialize the face generator
+        if (faceGenerator != null)
         {
-            // Generate a huge amount (hundreds of millions to billions)
-            playerMoney = Random.Range(100000000f, 3000000000f);
+            faceGenerator.Initialize();
         }
         else
         {
-            // Generate a modest amount ($10 to $1000)
-            playerMoney = Random.Range(10f, 1000f);
-            
-            // Add cents for realism
-            playerMoney += Random.Range(0.01f, 0.99f);
+            Debug.LogError("FaceGenerator not assigned!");
         }
         
-        Debug.Log($"Player starting with ${playerMoney:F2}");
+        // Show initial incoming call screen
+        ShowIncomingCall();
     }
-
-	private void UpdateCallCountDisplay()
-    {
-        if (leftCallCountText != null)
-            leftCallCountText.text = "Calls: " + callCount;
-            
-        if (rightCallCountText != null)
-            rightCallCountText.text = "Calls: " + callCount;
-    }
-	
+    
     private void OnDestroy()
     {
         // Unsubscribe from events
@@ -110,7 +80,6 @@ public class GameManager : MonoBehaviour
             inputManager.OnPickUpTriggered -= StartCall;
         }
     }
-	
     
     private void Update()
     {
@@ -167,13 +136,21 @@ public class GameManager : MonoBehaviour
     // Show incoming call screen and prepare next call
     private void ShowIncomingCall()
     {
-		// Increment call counter
+        // Increment call counter
         callCount++;
         UpdateCallCountDisplay();
-		UpdateScoreDisplay();
-		
-        // Generate new face content for this call
-        faceManager.PrepareCall();
+        UpdateScoreDisplay();
+        
+        // Generate new faces for this call using the new system
+        if (faceGenerator != null)
+        {
+            faceGenerator.GenerateNextRoundFaces();
+        }
+        else
+        {
+            // Fallback to old system
+            faceManager.PrepareCall();
+        }
         
         // Hide faces until call is answered
         faceManager.HideFaces();
@@ -183,6 +160,47 @@ public class GameManager : MonoBehaviour
         
         // Configure input for pickup phase
         inputManager.SetCallActive(false);
+    }
+    
+    // Update score display texts
+    private void UpdateScoreDisplay()
+    {
+        string scoreText = "No.Call: " + callCount;
+        
+        if (leftScoreText != null)
+            leftScoreText.text = scoreText;
+        
+        if (rightScoreText != null)
+            rightScoreText.text = scoreText;
+    }
+    
+    private void UpdateCallCountDisplay()
+    {
+        if (leftCallCountText != null)
+            leftCallCountText.text = "Calls: " + callCount;
+            
+        if (rightCallCountText != null)
+            rightCallCountText.text = "Calls: " + callCount;
+    }
+    
+    private void GeneratePlayerMoney()
+    {
+        // Decide if we generate a small or extremely large amount (90% small, 10% large)
+        if (Random.value > 0.9f)
+        {
+            // Generate a huge amount (hundreds of millions to billions)
+            playerMoney = Random.Range(100000000f, 3000000000f);
+        }
+        else
+        {
+            // Generate a modest amount ($10 to $1000)
+            playerMoney = Random.Range(10f, 1000f);
+            
+            // Add cents for realism
+            playerMoney += Random.Range(0.01f, 0.99f);
+        }
+        
+        Debug.Log($"Player starting with ${playerMoney:F2}");
     }
     
     // Start the call (when player picks up)
@@ -230,6 +248,12 @@ public class GameManager : MonoBehaviour
             correct = true;
         }
         
+        // Inform face generator about round completion
+        if (faceGenerator != null)
+        {
+            faceGenerator.OnRoundCompleted(correct);
+        }
+        
         // Display result (keep faces visible)
         panelManager.ShowResultPanel(resultMessage, correct);
         
@@ -240,9 +264,7 @@ public class GameManager : MonoBehaviour
         // Save player's data for game over screen if they've lost
         if (livesRemaining <= 0)
         {
-            PlayerPrefs.SetInt("CallCount", callCount);
-            PlayerPrefs.SetFloat("MoneyLost", playerMoney);
-            PlayerPrefs.Save();
+            SaveGameOverData();
         }
     }
     
@@ -272,6 +294,12 @@ public class GameManager : MonoBehaviour
             panelManager.UpdateLives(livesRemaining);
         }
         
+        // Inform face generator about round completion
+        if (faceGenerator != null)
+        {
+            faceGenerator.OnRoundCompleted(correct);
+        }
+        
         // Display result (keep faces visible)
         panelManager.ShowResultPanel(resultMessage, correct);
         
@@ -282,21 +310,17 @@ public class GameManager : MonoBehaviour
         // Save player's data for game over screen if they've lost
         if (livesRemaining <= 0)
         {
-            PlayerPrefs.SetInt("CallCount", callCount);
-            PlayerPrefs.SetFloat("MoneyLost", playerMoney);
-            PlayerPrefs.Save();
+            SaveGameOverData();
         }
     }
     
-    // Game over sequence
-    private IEnumerator GameOver()
+    // Save game over data for the GameOverManager to use
+    private void SaveGameOverData()
     {
-		// Save the player's data for the game over screen
         PlayerPrefs.SetInt("CallCount", callCount);
         PlayerPrefs.SetFloat("MoneyLost", playerMoney);
         PlayerPrefs.Save();
-		
-        yield return new WaitForSeconds(5f);
-        SceneManager.LoadScene(gameOverSceneName);
+        
+        Debug.Log($"Saved game over data - Calls: {callCount}, Money: ${playerMoney:F2}");
     }
 }
