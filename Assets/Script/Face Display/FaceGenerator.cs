@@ -120,6 +120,7 @@ public class FaceGenerator : MonoBehaviour
     [SerializeField] private float nonLearningFeatureChangeChance = 0.3f; // 30% chance to change
 
     // Update the GenerateDifferentLearnedFaces method
+    // Updated GenerateDifferentLearnedFaces
     private void GenerateDifferentLearnedFaces()
     {
         Face leftFace = new Face();
@@ -140,15 +141,27 @@ public class FaceGenerator : MonoBehaviour
         // Track if we're creating a hair-specific difference
         bool hairDifferenceCreated = false;
         
-        // Get all available feature categories on the face
+        // Get all available feature categories on the face that have learned features
         List<string> availableCategories = new List<string>();
         foreach (string category in FaceDatabase.Instance.FeatureCategories)
         {
-            // Only include categories that have features
-            if (leftFace.GetFeature(category) != null)
+            // Only include categories that have features ON THE FACE and have multiple learned options
+            if (leftFace.GetFeature(category) != null && 
+                FaceDatabase.Instance.GetLearnedFeatures(category).Count > 1)
             {
                 availableCategories.Add(category);
             }
+        }
+        
+        // If we don't have enough categories with multiple learned features, we can't create differences
+        if (availableCategories.Count == 0)
+        {
+            Debug.LogWarning("Cannot create different faces - not enough learned features available");
+            faceManager.SetLeftFace(leftFace);
+            faceManager.SetRightFace(rightFace);
+            faceManager.SetFacesIdentical(true); // Force identical since we can't create differences
+            currentFacesIdentical = true;
+            return;
         }
         
         // Shuffle to randomize which features will be changed
@@ -163,9 +176,8 @@ public class FaceGenerator : MonoBehaviour
             // Stop if we've made enough differences
             if (changesCreated >= numDifferences)
                 break;
-                
-            // Skip if this is a category we should preserve
-            // (Background and PhoneCase often preserved)
+            
+            // Skip background and phone case most of the time
             if ((category == "Background" || category == "PhoneCase") && 
                 Random.value > nonLearningFeatureChangeChance)
             {
@@ -179,38 +191,34 @@ public class FaceGenerator : MonoBehaviour
                 if (hairDifferenceCreated)
                     continue;
                     
-                // Create a hair difference
-                CreateHairDifference(leftFace, rightFace);
-                hairDifferenceCreated = true;
-                changesCreated++;
+                // Check if we can actually create a hair difference with learned features
+                if (FaceDatabase.Instance.GetLearnedFeatures("FrontHair").Count > 0 && 
+                    FaceDatabase.Instance.GetLearnedFeatures("BackHair").Count > 0)
+                {
+                    // Create a hair difference
+                    CreateHairDifference(leftFace, rightFace, true); // new parameter to use only learned features
+                    hairDifferenceCreated = true;
+                    changesCreated++;
+                }
             }
             else
             {
                 // For non-hair categories, apply the change with probability
                 if (Random.value < nonLearningFeatureChangeChance)
                 {
-                    // 80% chance to use learned features, 20% any feature
-                    if (Random.value < 0.8f)
-                    {
-                        bool changed = ReplaceFeatureFromLearnedSet(rightFace, category);
-                        if (changed)
-                            changesCreated++;
-                    }
-                    else
-                    {
-                        bool changed = ReplaceFeatureRandomly(rightFace, category);
-                        if (changed)
-                            changesCreated++;
-                    }
+                    bool changed = ReplaceFeatureFromLearnedSet(rightFace, category);
+                    if (changed)
+                        changesCreated++;
                 }
             }
         }
         
-        // If we didn't create any differences, force at least one
+        // If we didn't create any differences, force at least one if possible
         if (changesCreated == 0 && availableCategories.Count > 0)
         {
             string forcedCategory = availableCategories[0];
-            ReplaceFeatureFromLearnedSet(rightFace, forcedCategory);
+            bool changed = ReplaceFeatureFromLearnedSet(rightFace, forcedCategory);
+            changesCreated += changed ? 1 : 0;
         }
         
         // Apply hair consistency if needed
@@ -221,43 +229,51 @@ public class FaceGenerator : MonoBehaviour
         
         // Verify the faces are actually different
         bool actuallyDifferent = !AreFacesIdentical(leftFace, rightFace);
-        if (!actuallyDifferent)
-        {
-            Debug.LogWarning("Generated 'different' faces are actually identical! Forcing a difference...");
-            // Force a difference in the first available category
-            if (availableCategories.Count > 0)
-            {
-                ReplaceFeatureRandomly(rightFace, availableCategories[0]);
-            }
-        }
         
         // Set faces in the face manager
         faceManager.SetLeftFace(leftFace);
         faceManager.SetRightFace(rightFace);
-        faceManager.SetFacesIdentical(false);
+        faceManager.SetFacesIdentical(!actuallyDifferent); // Use actual difference state
+        
+        // Log detailed info about the faces
         DebugLogFaceGeneration("Different Learned Faces", leftFace, rightFace);
         
         // Track differences
         TrackDifferences(leftFace, rightFace);
-        currentFacesIdentical = false;
+        currentFacesIdentical = !actuallyDifferent;
     }
-    
 
     // New method to create hair differences
-    private void CreateHairDifference(Face leftFace, Face rightFace)
+    // Updated CreateHairDifference to optionally use only learned features
+    private void CreateHairDifference(Face leftFace, Face rightFace, bool useOnlyLearned = false)
     {
+        // Get lists of learned hair features
+        List<FacialFeature> learnedFrontHair = FaceDatabase.Instance.GetLearnedFeatures("FrontHair");
+        List<FacialFeature> learnedBackHair = FaceDatabase.Instance.GetLearnedFeatures("BackHair");
+        
+        // If we require learned features but don't have enough, return without making changes
+        if (useOnlyLearned && (learnedFrontHair.Count == 0 || learnedBackHair.Count == 0))
+        {
+            Debug.LogWarning("Cannot create hair difference - not enough learned hair features");
+            return;
+        }
+        
         // Special case: if one face has front hair and other has back hair
         if (leftFace.frontHair != null && leftFace.backHair == null)
         {
             // Give right face back hair instead
             rightFace.frontHair = null;
-            rightFace.backHair = FaceDatabase.Instance.GetRandomLearnedFeature("BackHair");
+            rightFace.backHair = useOnlyLearned ? 
+                GetRandomFeature(learnedBackHair) : 
+                FaceDatabase.Instance.GetRandomLearnedFeature("BackHair");
         }
         else if (leftFace.backHair != null && leftFace.frontHair == null)
         {
             // Give right face front hair instead
             rightFace.backHair = null;
-            rightFace.frontHair = FaceDatabase.Instance.GetRandomLearnedFeature("FrontHair");
+            rightFace.frontHair = useOnlyLearned ? 
+                GetRandomFeature(learnedFrontHair) : 
+                FaceDatabase.Instance.GetRandomLearnedFeature("FrontHair");
         }
         else
         {
@@ -266,34 +282,94 @@ public class FaceGenerator : MonoBehaviour
             {
                 // Left face gets front hair, right gets back hair
                 leftFace.backHair = null;
-                leftFace.frontHair = FaceDatabase.Instance.GetRandomLearnedFeature("FrontHair");
+                leftFace.frontHair = useOnlyLearned ? 
+                    GetRandomFeature(learnedFrontHair) : 
+                    FaceDatabase.Instance.GetRandomLearnedFeature("FrontHair");
                 
                 rightFace.frontHair = null;
-                rightFace.backHair = FaceDatabase.Instance.GetRandomLearnedFeature("BackHair");
+                rightFace.backHair = useOnlyLearned ? 
+                    GetRandomFeature(learnedBackHair) : 
+                    FaceDatabase.Instance.GetRandomLearnedFeature("BackHair");
             }
             else
             {
                 // Left face gets back hair, right gets front hair
                 leftFace.frontHair = null;
-                leftFace.backHair = FaceDatabase.Instance.GetRandomLearnedFeature("BackHair");
+                leftFace.backHair = useOnlyLearned ? 
+                    GetRandomFeature(learnedBackHair) : 
+                    FaceDatabase.Instance.GetRandomLearnedFeature("BackHair");
                 
                 rightFace.backHair = null;
-                rightFace.frontHair = FaceDatabase.Instance.GetRandomLearnedFeature("FrontHair");
+                rightFace.frontHair = useOnlyLearned ? 
+                    GetRandomFeature(learnedFrontHair) : 
+                    FaceDatabase.Instance.GetRandomLearnedFeature("FrontHair");
             }
         }
     }
-    
+
+    // Helper method to safely get a random feature from a list
+    private FacialFeature GetRandomFeature(List<FacialFeature> features)
+    {
+        if (features == null || features.Count == 0)
+            return null;
+            
+        int randomIndex = Random.Range(0, features.Count);
+        return features[randomIndex];
+    }
     // Generate faces from unlearned groups/sets
     // In GenerateUnlearnedFaces method
+    // Fix for FaceGenerator.cs - GenerateUnlearnedFaces
+    
     private void GenerateUnlearnedFaces()
     {
+        // Add diagnostic to see all unlearned groups at start
+        List<FeatureGroup> allUnlearnedGroups = FaceDatabase.Instance.GetUnlearnedGroups();
+        Debug.Log($"Found {allUnlearnedGroups.Count} unlearned groups");
+        foreach (var group in allUnlearnedGroups)
+        {
+            int unlearnedSets = 0;
+            foreach (var set in group.sets)
+            {
+                if (!set.isLearned)
+                    unlearnedSets++;
+            }
+            
+            Debug.Log($"Unlearned group '{group.groupName}' has {unlearnedSets}/{group.sets.Count} unlearned sets");
+        }
+        
         // Try to select an unlearned group
         FeatureGroup selectedGroup = SelectUnlearnedGroup();
         
         if (selectedGroup == null)
         {
-            // Fall back to differences if no unlearned groups
-            Debug.Log("No unlearned groups available, falling back to different learned faces");
+            // No unlearned groups available - debug this situation
+            Debug.LogWarning("No unlearned groups available - this indicates a problem with the learning system");
+            Debug.LogWarning("Performing diagnostic of all groups:");
+            
+            var allGroups = new List<FeatureGroup>();
+            var groupsField = typeof(FaceDatabase).GetField("allGroups", 
+                System.Reflection.BindingFlags.NonPublic | 
+                System.Reflection.BindingFlags.Instance);
+                
+            if (groupsField != null)
+            {
+                allGroups = groupsField.GetValue(FaceDatabase.Instance) as List<FeatureGroup>;
+                
+                if (allGroups != null)
+                {
+                    foreach (var group in allGroups)
+                    {
+                        Debug.LogWarning($"Group '{group.groupName}', isLearned={group.isLearned}, Sets={group.sets.Count}");
+                        foreach (var set in group.sets)
+                        {
+                            Debug.LogWarning($"- Set isLearned={set.isLearned}, Left={set.leftPart.features.Count}, Right={set.rightPart.features.Count}");
+                        }
+                    }
+                }
+            }
+            
+            // Fall back to differences
+            Debug.Log("Falling back to different learned faces");
             GenerateDifferentLearnedFaces();
             return;
         }
@@ -305,11 +381,20 @@ public class FaceGenerator : MonoBehaviour
         
         if (currentSet == null)
         {
-            // Mark group as learned if we got here somehow
+            // This should not happen if GetNextUnlearnedSet is working correctly
+            Debug.LogWarning($"No unlearned sets found in group '{selectedGroup.groupName}' despite group not being marked as learned!");
+            
+            // Mark group as learned as a failsafe
             selectedGroup.isLearned = true;
             
+            #if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(FaceDatabase.Instance.gameObject);
+            // Fix the error with SetDirty by using the gameObject that holds selectedGroup
+            // UnityEditor.EditorUtility.SetDirty(selectedGroup); <- This causes an error
+            #endif
+            
             // Fall back to differences
-            Debug.Log($"No unlearned sets in the selected group '{selectedGroup.groupName}', falling back to different learned faces");
+            Debug.Log("Falling back to different learned faces");
             GenerateDifferentLearnedFaces();
             return;
         }
@@ -317,10 +402,18 @@ public class FaceGenerator : MonoBehaviour
         // Log detailed info about the selected set
         Debug.Log($"Selected set with {currentSet.leftPart.features.Count} left features and {currentSet.rightPart.features.Count} right features");
         
+        // Verify that the set has features to use before proceeding
+        if (currentSet.leftPart.features.Count == 0 || currentSet.rightPart.features.Count == 0)
+        {
+            Debug.LogWarning("Selected set has empty parts! Falling back to different learned faces");
+            GenerateDifferentLearnedFaces();
+            return;
+        }
+        
         // Decide if we should flip sides (50% chance)
         bool flipSides = (Random.value < 0.5f);
         
-        // Generate ONLY ONE base face with learned features
+        // Generate base face with learned features
         Face baseFace = new Face();
         FillWithLearnedFeatures(baseFace, maxFeaturesPerFace);
         
@@ -346,16 +439,11 @@ public class FaceGenerator : MonoBehaviour
         EnforceHairConsistency(leftFace, true);
         EnforceHairConsistency(rightFace, true);
         
-        // Determine if faces are identical based on the set
-        bool areIdentical = currentSet.AreFacesIdentical();
+        // Directly determine if faces are identical through feature comparison
+        bool areIdentical = AreFacesIdentical(leftFace, rightFace);
         
-        // Verify with a direct comparison
-        bool directComparison = AreFacesIdentical(leftFace, rightFace);
-        
-        if (areIdentical != directComparison) {
-            Debug.LogWarning($"Identity mismatch! Set says {areIdentical} but direct comparison says {directComparison}");
-            areIdentical = directComparison;
-        }
+        // Log identicity state
+        Debug.Log($"Faces are {(areIdentical ? "identical" : "different")}");
         
         // Set faces in the face manager
         faceManager.SetLeftFace(leftFace);
@@ -370,11 +458,15 @@ public class FaceGenerator : MonoBehaviour
         // Track differences
         TrackDifferences(leftFace, rightFace);
         
+        // Detailed logging for debugging
+        DebugLogFaceGeneration("Unlearned Group/Set Faces", leftFace, rightFace);
+        
         Debug.Log($"Generated faces from group '{selectedGroup.groupName}', flipped: {flipSides}, identical: {areIdentical}");
     }
     
     // Fill a face with random learned features
     // Modify FillWithLearnedFeatures to ensure it adds enough features
+    // Fix for FaceGenerator.cs - FillWithLearnedFeatures
     private void FillWithLearnedFeatures(Face face, int maxFeatures)
     {
         Debug.Log($"Starting to fill face with up to {maxFeatures} features (plus BG and Phone)");
@@ -425,6 +517,11 @@ public class FaceGenerator : MonoBehaviour
                     addedCategories.Add(category);
                     Debug.Log($"Added required feature: {category}:{feature.partName} (Learned: {feature.isLearned})");
                 }
+                else
+                {
+                    // Don't add unlearned features, just log that we're skipping
+                    Debug.Log($"Skipping required feature {category} - no learned features available");
+                }
             }
         }
         
@@ -448,6 +545,7 @@ public class FaceGenerator : MonoBehaviour
                 addedCategories.Add(category);
                 Debug.Log($"Added feature: {category}:{feature.partName} (Learned: {feature.isLearned})");
             }
+            // Don't add unlearned features, just move on to the next category
         }
         
         int actualFeatureCount = 0;
@@ -458,8 +556,6 @@ public class FaceGenerator : MonoBehaviour
         }
         
         Debug.Log($"Final face has {actualFeatureCount - 2} facial features (plus BG and Phone)");
-        
-        // Hair consistency should be handled after this
     }
     
     // Apply a list of features to a face
@@ -521,33 +617,34 @@ public class FaceGenerator : MonoBehaviour
     }
     
     // Replace a feature with a random different one
+    // Updated ReplaceFeatureRandomly to only use learned features
     private bool ReplaceFeatureRandomly(Face face, string category)
     {
         // Get the current feature
         FacialFeature currentFeature = face.GetFeature(category);
-    
+
         if (currentFeature == null) return false; // Can't replace if it doesn't exist
-    
-        // Get all features in this category
-        List<FacialFeature> allFeatures = FaceDatabase.Instance.GetFeaturesByCategory(category);
-    
+
+        // Get all LEARNED features in this category
+        List<FacialFeature> learnedFeatures = FaceDatabase.Instance.GetLearnedFeatures(category);
+
         // Filter out the current feature
         List<FacialFeature> availableFeatures = new List<FacialFeature>();
-    
-        foreach (FacialFeature feature in allFeatures)
+
+        foreach (FacialFeature feature in learnedFeatures)
         {
             if (feature.id != currentFeature.id)
             {
                 availableFeatures.Add(feature);
             }
         }
-    
+
         if (availableFeatures.Count == 0) return false; // No alternatives available
-    
+
         // Pick a random different feature
         int randomIndex = Random.Range(0, availableFeatures.Count);
         face.SetFeature(category, availableFeatures[randomIndex]);
-    
+
         return true; // Successfully changed feature
     }
     
@@ -555,40 +652,76 @@ public class FaceGenerator : MonoBehaviour
     private FeatureGroup SelectUnlearnedGroup()
     {
         List<FeatureGroup> unlearnedGroups = FaceDatabase.Instance.GetUnlearnedGroups();
-        
+    
         if (unlearnedGroups.Count == 0)
         {
             return null;
         }
-        
+    
+        // Filter to only include groups that have unlearned sets
+        List<FeatureGroup> validGroups = new List<FeatureGroup>();
+        foreach (var group in unlearnedGroups)
+        {
+            FaceSet nextUnlearnedSet = group.GetNextUnlearnedSet();
+            if (nextUnlearnedSet != null)
+            {
+                validGroups.Add(group);
+            }
+            else
+            {
+                // This group has no unlearned sets but is not marked as learned - fix it
+                Debug.LogWarning($"Group {group.groupName} has no unlearned sets but isLearned=False. Fixing...");
+                group.isLearned = true;
+            
+#if UNITY_EDITOR
+            // Only set dirty the FaceDatabase instance
+            UnityEditor.EditorUtility.SetDirty(FaceDatabase.Instance.gameObject);
+#endif
+            }
+        }
+    
+        if (validGroups.Count == 0)
+        {
+            Debug.LogWarning("No valid unlearned groups with unlearned sets found");
+            return null;
+        }
+    
+        // Debug valid groups
+        Debug.Log($"Found {validGroups.Count} valid unlearned groups with unlearned sets");
+        foreach (var group in validGroups)
+        {
+            Debug.Log($"Valid group: {group.groupName}, selection chance: {group.selectionChance}");
+        }
+    
         // Calculate total weight
         float totalWeight = 0;
-        foreach (FeatureGroup group in unlearnedGroups)
+        foreach (FeatureGroup group in validGroups)
         {
             totalWeight += group.selectionChance;
         }
-        
+    
         // Random selection based on weights
         float randomValue = Random.value * totalWeight;
         float currentWeight = 0;
-        
-        foreach (FeatureGroup group in unlearnedGroups)
+    
+        foreach (FeatureGroup group in validGroups)
         {
             currentWeight += group.selectionChance;
-            
+        
             if (randomValue <= currentWeight)
             {
                 return group;
             }
         }
-        
+    
         // Fallback to first group
-        return unlearnedGroups[0];
+        return validGroups[0];
     }
     
     // Called when a round is completed (success or failure)
     // Ensure learning works properly
     // In FaceGenerator.cs
+    // Fix for FaceGenerator.cs - OnRoundCompleted
     public void OnRoundCompleted(bool playerSucceeded)
     {
         Debug.Log($"Round completed, success: {playerSucceeded}");
@@ -621,19 +754,9 @@ public class FaceGenerator : MonoBehaviour
                 // Check if the group is now fully learned
                 if (currentActiveGroup != null)
                 {
-                    bool allSetsLearned = true;
-                    foreach (FaceSet set in currentActiveGroup.sets)
+                    currentActiveGroup.isLearned = currentActiveGroup.AreAllSetsLearned();
+                    if (currentActiveGroup.isLearned)
                     {
-                        if (!set.isLearned)
-                        {
-                            allSetsLearned = false;
-                            break;
-                        }
-                    }
-                    
-                    if (allSetsLearned && !currentActiveGroup.isLearned)
-                    {
-                        currentActiveGroup.isLearned = true;
                         Debug.Log($"Group '{currentActiveGroup.groupName}' is now fully learned");
                     }
                     else
@@ -641,6 +764,13 @@ public class FaceGenerator : MonoBehaviour
                         Debug.Log($"Group '{currentActiveGroup.groupName}' still has unlearned sets");
                     }
                 }
+                
+                // Make sure Unity saves the changes
+                #if UNITY_EDITOR
+                // Only set dirty the FaceDatabase instance
+                UnityEditor.EditorUtility.SetDirty(FaceDatabase.Instance.gameObject);
+                UnityEditor.EditorUtility.SetDirty(this.gameObject);
+                #endif
             }
             else
             {
@@ -652,7 +782,19 @@ public class FaceGenerator : MonoBehaviour
             Debug.Log("No active set to mark as learned");
         }
     }
-    
+
+    // Add this debug method to verify learning is working
+    private void DebugLearnedFeatureCounts()
+    {
+        Debug.Log("=== LEARNED FEATURE COUNTS AFTER UPDATING ===");
+        foreach (string category in FaceDatabase.Instance.FeatureCategories)
+        {
+            int learnedCount = FaceDatabase.Instance.GetLearnedFeatures(category).Count;
+            int totalCount = FaceDatabase.Instance.GetFeaturesByCategory(category).Count;
+            Debug.Log($"{category}: {learnedCount}/{totalCount} learned");
+        }
+        Debug.Log("=== END OF LEARNED FEATURE COUNTS ===");
+    }
     // Helper to shuffle a list
     private void ShuffleList<T>(List<T> list)
     {
@@ -668,26 +810,19 @@ public class FaceGenerator : MonoBehaviour
     }
     
     // Add this method to enforce only one hair type per face
-    // In FaceGenerator.cs
-    // In FaceGenerator.cs
-    // In FaceGenerator.cs
+    // Fix for FaceGenerator.cs - EnforceHairConsistency
     private void EnforceHairConsistency(Face face, bool preserveLearningFeatures = true)
     {
-        // Skip if both hair types are null
-        if (face.frontHair == null && face.backHair == null)
-            return;
-        
-        // Skip if only one hair type is present
-        if ((face.frontHair != null && face.backHair == null) || 
-            (face.frontHair == null && face.backHair != null))
+        // If one or both hair types are null, no need to enforce consistency
+        if (face.frontHair == null || face.backHair == null)
             return;
     
-        // If we get here, both hair types are present
+        // If we get here, both hair types are present - we need to remove one
         Debug.Log("Both hair types present, enforcing consistency");
-    
+
         bool frontHairFromLearningSet = IsFeatureFromLearningSet(face.frontHair);
         bool backHairFromLearningSet = IsFeatureFromLearningSet(face.backHair);
-    
+
         // If preserving learning features and one is from a learning set
         if (preserveLearningFeatures)
         {
@@ -1201,5 +1336,117 @@ public class FaceGenerator : MonoBehaviour
                 Debug.Log($"Selection {i+1}: No unlearned groups available");
             }
         }
+    }
+    // Add to FaceGenerator.cs
+    public void DiagnoseFeatureLearningState()
+    {
+        Debug.Log("=== FEATURE LEARNING STATE DIAGNOSTIC ===");
+    
+        // Get all feature categories
+        string[] categories = FaceDatabase.Instance.FeatureCategories;
+    
+        // Report for each category
+        foreach (string category in categories)
+        {
+            List<FacialFeature> allFeatures = FaceDatabase.Instance.GetFeaturesByCategory(category);
+            List<FacialFeature> learnedFeatures = FaceDatabase.Instance.GetLearnedFeatures(category);
+        
+            Debug.Log($"{category}: {learnedFeatures.Count}/{allFeatures.Count} learned features");
+        
+            // List all learned features for debugging
+            if (learnedFeatures.Count > 0)
+            {
+                foreach (FacialFeature feature in learnedFeatures)
+                {
+                    Debug.Log($"  - Learned: {feature.partName}");
+                }
+            }
+        }
+    
+        // Report all groups and their learned status
+        var allGroups = new List<FeatureGroup>();
+        allGroups.AddRange(FaceDatabase.Instance.GetLearnedGroups());
+        allGroups.AddRange(FaceDatabase.Instance.GetUnlearnedGroups());
+    
+        Debug.Log($"Groups: {FaceDatabase.Instance.GetLearnedGroups().Count}/{allGroups.Count} learned groups");
+    
+        foreach (FeatureGroup group in allGroups)
+        {
+            int learnedSets = 0;
+            foreach (FaceSet set in group.sets)
+            {
+                if (set.isLearned) learnedSets++;
+            }
+        
+            Debug.Log($"  - Group: {group.groupName}, {learnedSets}/{group.sets.Count} learned sets, IsLearned: {group.isLearned}");
+        }
+    
+        Debug.Log("=== END OF DIAGNOSTIC ===");
+    }
+    // Add to FaceDatabase.cs
+    public void SynchronizeLearningState()
+    {
+        Debug.Log("Synchronizing learning state of features, sets, and groups");
+        
+        // Check if any sets in a learned group are not marked as learned
+        var allGroups = new List<FeatureGroup>();
+        allGroups.AddRange(FaceDatabase.Instance.GetLearnedGroups());
+        allGroups.AddRange(FaceDatabase.Instance.GetUnlearnedGroups());
+        foreach (var group in allGroups)
+        {
+            if (group.isLearned)
+            {
+                foreach (var set in group.sets)
+                {
+                    if (!set.isLearned)
+                    {
+                        Debug.LogWarning($"Inconsistency: Set in learned group '{group.groupName}' is not marked as learned. Fixing...");
+                        set.isLearned = true;
+                        
+                        // Also mark all features in this set as learned
+                        foreach (var feature in set.leftPart.features)
+                        {
+                            feature.isLearned = true;
+                        }
+                        
+                        foreach (var feature in set.rightPart.features)
+                        {
+                            feature.isLearned = true;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Check if all sets in a group are learned but group is not marked as learned
+        
+        foreach (var group in allGroups)
+        {
+            if (!group.isLearned)
+            {
+                bool allSetsLearned = true;
+                foreach (var set in group.sets)
+                {
+                    if (!set.isLearned)
+                    {
+                        allSetsLearned = false;
+                        break;
+                    }
+                }
+                
+                if (allSetsLearned && group.sets.Count > 0)
+                {
+                    Debug.LogWarning($"Inconsistency: All sets in group '{group.groupName}' are learned but group is not marked as learned. Fixing...");
+                    group.isLearned = true;
+                }
+            }
+        }
+        
+        #if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this.gameObject);
+        UnityEditor.AssetDatabase.SaveAssets();
+        #endif
+        
+        Debug.Log("Learning state synchronization complete");
     }
 }

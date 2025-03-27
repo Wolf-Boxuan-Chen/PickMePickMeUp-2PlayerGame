@@ -99,29 +99,22 @@ public class FaceDatabase : MonoBehaviour
     }
     
     // Get a random learned feature from a category
+    // Fix for FaceDatabase.cs - GetRandomLearnedFeature
     public FacialFeature GetRandomLearnedFeature(string category)
     {
         List<FacialFeature> learnedFeatures = GetLearnedFeatures(category);
-    
+
         // First, try to find a learned feature
         if (learnedFeatures.Count > 0)
         {
             int randomIndex = Random.Range(0, learnedFeatures.Count);
             return learnedFeatures[randomIndex];
         }
+
+        // Log a warning if no learned features are available
+        Debug.LogWarning($"No learned {category} features available! Skipping this feature category.");
     
-        // Log a warning if no learned features are available for critical features
-        Debug.LogWarning($"No learned {category} features available! Falling back to unlearned feature.");
-    
-        // If no learned features, fall back to any feature
-        List<FacialFeature> allFeatures = GetFeaturesByCategory(category);
-        if (allFeatures.Count > 0)
-        {
-            int randomIndex = Random.Range(0, allFeatures.Count);
-            return allFeatures[randomIndex];
-        }
-    
-        // If no features at all, return null
+        // Return null instead of falling back to unlearned features
         return null;
     }
     
@@ -172,5 +165,77 @@ public class FaceDatabase : MonoBehaviour
         }
         
         return learnedSets;
+    }
+    // Add to FaceDatabase.cs
+    public void MarkFeatureAsLearned(FacialFeature feature)
+    {
+        if (feature != null && !feature.isLearned)
+        {
+            feature.isLearned = true;
+            Debug.Log($"Marked feature as learned: {feature.category}:{feature.partName}");
+        
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this.gameObject);
+#endif
+        }
+    }
+
+    public void MarkSetAsLearned(FaceSet set)
+    {
+        if (set != null && !set.isLearned)
+        {
+            set.isLearned = true;
+        
+            // Mark all features in the set as learned
+            foreach (FacialFeature feature in set.leftPart.features)
+            {
+                MarkFeatureAsLearned(feature);
+            }
+        
+            foreach (FacialFeature feature in set.rightPart.features)
+            {
+                MarkFeatureAsLearned(feature);
+            }
+        
+            Debug.Log("Marked set as learned with all its features");
+        
+#if UNITY_EDITOR
+        UnityEditor.EditorUtility.SetDirty(this.gameObject);
+#endif
+        }
+    }
+
+    public void CheckAndUpdateGroupLearningStatus(FeatureGroup group)
+    {
+        if (group != null)
+        {
+            bool wasLearned = group.isLearned;
+            group.isLearned = group.AreAllSetsLearned();
+        
+            if (!wasLearned && group.isLearned)
+            {
+                Debug.Log($"Group '{group.groupName}' is now fully learned");
+            
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this.gameObject);
+#endif
+            }
+        }
+    }
+    // Add to FaceDatabase.cs
+    
+    // Replace or remove the SaveLearningState method in FaceDatabase.cs
+    public void SaveLearningState()
+    {
+#if UNITY_EDITOR
+    // Only set dirty the database gameObject itself
+    UnityEditor.EditorUtility.SetDirty(this.gameObject);
+    
+    // DON'T try to set dirty individual features, groups, or sets
+    // as they don't inherit from UnityEngine.Object
+    
+    // Force Unity to save all assets
+    UnityEditor.AssetDatabase.SaveAssets();
+#endif
     }
 }
