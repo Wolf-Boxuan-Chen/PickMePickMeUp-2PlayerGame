@@ -7,6 +7,11 @@ public class FaceDatabase : MonoBehaviour
     // Static accessor
     private static FaceDatabase _instance;
     
+    // track learned features
+    private Dictionary<string, bool> runtimeLearnedFeatures = new Dictionary<string, bool>();
+    private Dictionary<string, bool> runtimeLearnedSets = new Dictionary<string, bool>();
+    private Dictionary<string, bool> runtimeLearnedGroups = new Dictionary<string, bool>();
+    
     // Add weights to the FaceDatabase for each category
     public Dictionary<string, float> CategoryWeights = new Dictionary<string, float>()
     {
@@ -49,6 +54,122 @@ public class FaceDatabase : MonoBehaviour
     [SerializeField] private List<FacialFeature> allFeatures = new List<FacialFeature>();
     [SerializeField] private List<FeatureGroup> allGroups = new List<FeatureGroup>();
     
+    // Initialize the runtime cache on Start
+    private void Start()
+    {
+        InitializeRuntimeCache();
+    }
+    
+    private void InitializeRuntimeCache()
+    {
+        // Initialize from current state
+        runtimeLearnedFeatures.Clear();
+        runtimeLearnedSets.Clear();
+        runtimeLearnedGroups.Clear();
+        
+        // Cache all feature learned states
+        foreach (FacialFeature feature in allFeatures)
+        {
+            if (feature != null)
+            {
+                runtimeLearnedFeatures[feature.id] = feature.isLearned;
+            }
+        }
+        
+        // Cache all group and set learned states
+        foreach (FeatureGroup group in allGroups)
+        {
+            if (group != null)
+            {
+                runtimeLearnedGroups[group.id] = group.isLearned;
+                
+                foreach (FaceSet set in group.sets)
+                {
+                    if (set != null)
+                    {
+                        // Generate a unique ID for the set (since it doesn't have one)
+                        string setId = group.id + "_" + group.sets.IndexOf(set);
+                        runtimeLearnedSets[setId] = set.isLearned;
+                    }
+                }
+            }
+        }
+        
+        Debug.Log($"Runtime cache initialized: {runtimeLearnedFeatures.Count} features, {runtimeLearnedSets.Count} sets, {runtimeLearnedGroups.Count} groups");
+    }
+
+    // New methods to update and check the runtime cache
+    public void MarkFeatureLearnedRuntime(FacialFeature feature)
+    {
+        if (feature == null) return;
+        
+        // Update both the original and the cache
+        feature.isLearned = true;
+        runtimeLearnedFeatures[feature.id] = true;
+        
+        Debug.Log($"Runtime marked as learned: {feature.category}:{feature.partName}");
+    }
+
+    public void MarkSetLearnedRuntime(FeatureGroup group, FaceSet set)
+    {
+        if (group == null || set == null) return;
+        
+        // Update the set
+        set.isLearned = true;
+        
+        // Generate the set ID
+        string setId = group.id + "_" + group.sets.IndexOf(set);
+        runtimeLearnedSets[setId] = true;
+        
+        // Mark all features in the set as learned
+        foreach (FacialFeature feature in set.leftPart.features)
+        {
+            MarkFeatureLearnedRuntime(feature);
+        }
+        
+        foreach (FacialFeature feature in set.rightPart.features)
+        {
+            MarkFeatureLearnedRuntime(feature);
+        }
+        
+        Debug.Log("Runtime marked set as learned with all its features");
+        
+        // Check if the group is now fully learned
+        CheckGroupLearnedStateRuntime(group);
+    }
+
+    public void CheckGroupLearnedStateRuntime(FeatureGroup group)
+    {
+        if (group == null) return;
+        
+        // Check if all sets in the group are learned
+        bool allSetsLearned = true;
+        
+        foreach (FaceSet set in group.sets)
+        {
+            if (set != null)
+            {
+                string setId = group.id + "_" + group.sets.IndexOf(set);
+                
+                if (!runtimeLearnedSets.ContainsKey(setId) || !runtimeLearnedSets[setId])
+                {
+                    allSetsLearned = false;
+                    break;
+                }
+            }
+        }
+        
+        // Update the group's learned state
+        group.isLearned = allSetsLearned;
+        runtimeLearnedGroups[group.id] = allSetsLearned;
+        
+        if (allSetsLearned)
+        {
+            Debug.Log($"Runtime marked group '{group.groupName}' as fully learned");
+        }
+    }
+    
+    
     // Add a feature to the database
     public FacialFeature AddFeature(string category, string partName, Sprite sprite, bool isLearned = false)
     {
@@ -75,28 +196,37 @@ public class FaceDatabase : MonoBehaviour
     }
     
     // Get learned features by category
+    // Override the existing methods to use our runtime cache
     public List<FacialFeature> GetLearnedFeatures(string category)
     {
-        return allFeatures.Where(f => f.category == category && f.isLearned).ToList();
+        return allFeatures.Where(f => 
+            f.category == category && 
+            (f.isLearned || (runtimeLearnedFeatures.ContainsKey(f.id) && runtimeLearnedFeatures[f.id]))
+        ).ToList();
     }
-    
-    // Get unlearned features by category
+
     public List<FacialFeature> GetUnlearnedFeatures(string category)
     {
-        return allFeatures.Where(f => f.category == category && !f.isLearned).ToList();
+        return allFeatures.Where(f => 
+            f.category == category && 
+            !(f.isLearned || (runtimeLearnedFeatures.ContainsKey(f.id) && runtimeLearnedFeatures[f.id]))
+        ).ToList();
     }
-    
-    // Get all learned groups
+
     public List<FeatureGroup> GetLearnedGroups()
     {
-        return allGroups.Where(g => g.isLearned).ToList();
+        return allGroups.Where(g => 
+            g.isLearned || (runtimeLearnedGroups.ContainsKey(g.id) && runtimeLearnedGroups[g.id])
+        ).ToList();
     }
-    
-    // Get all unlearned groups
+
     public List<FeatureGroup> GetUnlearnedGroups()
     {
-        return allGroups.Where(g => !g.isLearned).ToList();
+        return allGroups.Where(g => 
+            !(g.isLearned || (runtimeLearnedGroups.ContainsKey(g.id) && runtimeLearnedGroups[g.id]))
+        ).ToList();
     }
+    
     
     // Get a random learned feature from a category
     // Fix for FaceDatabase.cs - GetRandomLearnedFeature

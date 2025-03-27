@@ -60,14 +60,14 @@ public class FaceGenerator : MonoBehaviour
         currentActiveSet = null;
         currentActiveGroup = null;
         
-        if (rng < 0.3f)
+        if (rng < 0.1f)
         {
             // 30% chance: Generate identical faces
             generationMethod = "Identical Learned Faces";
             Debug.Log($"Generating {generationMethod}");
             GenerateIdenticalLearnedFaces();
         }
-        else if (rng < 0.6f)
+        else if (rng < 0.3f)
         {
             // 30% chance: Generate faces with differences
             generationMethod = "Different Learned Faces";
@@ -107,7 +107,7 @@ public class FaceGenerator : MonoBehaviour
         faceManager.SetLeftFace(leftFace);
         faceManager.SetRightFace(rightFace);
         faceManager.SetFacesIdentical(true);
-        DebugLogFaceGeneration("Different Learned Faces", leftFace, rightFace);
+        DebugLogFaceGeneration("Identical Learned Faces", leftFace, rightFace);
         
         // Update tracking
         currentFacesIdentical = true;
@@ -725,52 +725,26 @@ public class FaceGenerator : MonoBehaviour
     public void OnRoundCompleted(bool playerSucceeded)
     {
         Debug.Log($"Round completed, success: {playerSucceeded}");
-        
+    
         // Only mark learning if we used an unlearned set
         if (currentActiveSet != null)
         {
             Debug.Log($"Active set found, was learned: {currentActiveSet.isLearned}");
-            
+        
             if (!currentActiveSet.isLearned)
             {
-                // Mark set as learned
-                currentActiveSet.isLearned = true;
-                
-                // Mark all features in the set as learned
-                foreach (FacialFeature feature in currentActiveSet.leftPart.features)
+                // Use the new runtime-based learning method
+                FaceDatabase.Instance.MarkSetLearnedRuntime(currentActiveGroup, currentActiveSet);
+            
+                // Debug the state after marking
+                Debug.Log("=== LEARNED FEATURE COUNTS AFTER UPDATING ===");
+                foreach (string category in FaceDatabase.Instance.FeatureCategories)
                 {
-                    Debug.Log($"Marking as learned: {feature.category}:{feature.partName}");
-                    feature.isLearned = true;
+                    int learnedCount = FaceDatabase.Instance.GetLearnedFeatures(category).Count;
+                    int totalCount = FaceDatabase.Instance.GetFeaturesByCategory(category).Count;
+                    Debug.Log($"{category}: {learnedCount}/{totalCount} learned");
                 }
-                
-                foreach (FacialFeature feature in currentActiveSet.rightPart.features)
-                {
-                    Debug.Log($"Marking as learned: {feature.category}:{feature.partName}");
-                    feature.isLearned = true;
-                }
-                
-                Debug.Log("Marked set as learned with its features");
-                
-                // Check if the group is now fully learned
-                if (currentActiveGroup != null)
-                {
-                    currentActiveGroup.isLearned = currentActiveGroup.AreAllSetsLearned();
-                    if (currentActiveGroup.isLearned)
-                    {
-                        Debug.Log($"Group '{currentActiveGroup.groupName}' is now fully learned");
-                    }
-                    else
-                    {
-                        Debug.Log($"Group '{currentActiveGroup.groupName}' still has unlearned sets");
-                    }
-                }
-                
-                // Make sure Unity saves the changes
-                #if UNITY_EDITOR
-                // Only set dirty the FaceDatabase instance
-                UnityEditor.EditorUtility.SetDirty(FaceDatabase.Instance.gameObject);
-                UnityEditor.EditorUtility.SetDirty(this.gameObject);
-                #endif
+                Debug.Log("=== END OF LEARNED FEATURE COUNTS ===");
             }
             else
             {
