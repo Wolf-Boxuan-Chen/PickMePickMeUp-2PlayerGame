@@ -558,23 +558,6 @@ public class FaceGenerator : MonoBehaviour
         Debug.Log($"Final face has {actualFeatureCount - 2} facial features (plus BG and Phone)");
     }
     
-    // Apply a list of features to a face
-    private void ApplySetFeatures(Face face, List<FacialFeature> features)
-    {
-        // Track categories we're applying from the set
-        HashSet<string> categoriesFromSet = new HashSet<string>();
-    
-        foreach (FacialFeature feature in features)
-        {
-            face.SetFeature(feature.category, feature);
-            categoriesFromSet.Add(feature.category);
-            Debug.Log($"Applied set feature: {feature.category}:{feature.partName} (Learned: {feature.isLearned})");
-        }
-    
-        // Store this information directly on the face for EnforceHairConsistency to use
-        face.categoriesFromSet = categoriesFromSet;
-    }
-    
     // Update ReplaceFeatureFromLearnedSet to return if it successfully changed the feature
     // Replace a feature from a learned set
     private bool ReplaceFeatureFromLearnedSet(Face face, string category)
@@ -733,26 +716,70 @@ public class FaceGenerator : MonoBehaviour
     public void OnRoundCompleted(bool playerSucceeded)
     {
         Debug.Log($"Round completed, success: {playerSucceeded}");
-    
+        
         // Only mark learning if we used an unlearned set
         if (currentActiveSet != null)
         {
+            // Report both object state and cache state (if you have a method to check cache)
             Debug.Log($"Active set found, was learned: {currentActiveSet.isLearned}");
-        
+            
             if (!currentActiveSet.isLearned)
             {
-                // Use the new runtime-based learning method
-                FaceDatabase.Instance.MarkSetLearnedRuntime(currentActiveGroup, currentActiveSet);
-            
-                // Debug the state after marking
-                Debug.Log("=== LEARNED FEATURE COUNTS AFTER UPDATING ===");
+                // Mark set as learned using your existing method
+                // Mark all features in the set as learned
+                foreach (FacialFeature feature in currentActiveSet.leftPart.features)
+                {
+                    Debug.Log($"Marking as learned: {feature.category}:{feature.partName}");
+                    feature.isLearned = true;
+                }
+                
+                foreach (FacialFeature feature in currentActiveSet.rightPart.features)
+                {
+                    Debug.Log($"Marking as learned: {feature.category}:{feature.partName}");
+                    feature.isLearned = true;
+                }
+                
+                // Mark the set itself as learned
+                currentActiveSet.isLearned = true;
+                Debug.Log("Marked set as learned with its features");
+                
+                // Check if the group is now fully learned
+                if (currentActiveGroup != null)
+                {
+                    currentActiveGroup.isLearned = currentActiveGroup.AreAllSetsLearned();
+                    if (currentActiveGroup.isLearned)
+                    {
+                        Debug.Log($"Group '{currentActiveGroup.groupName}' is now fully learned");
+                    }
+                    else
+                    {
+                        Debug.Log($"Group '{currentActiveGroup.groupName}' still has unlearned sets");
+                    }
+                }
+                
+                // Add detailed debug output after marking as learned
+                Debug.Log("=== LEARNED FEATURE STATUS AFTER UPDATE ===");
                 foreach (string category in FaceDatabase.Instance.FeatureCategories)
                 {
-                    int learnedCount = FaceDatabase.Instance.GetLearnedFeatures(category).Count;
-                    int totalCount = FaceDatabase.Instance.GetFeaturesByCategory(category).Count;
-                    Debug.Log($"{category}: {learnedCount}/{totalCount} learned");
+                    List<FacialFeature> learnedFeatures = FaceDatabase.Instance.GetLearnedFeatures(category);
+                    int totalFeatures = FaceDatabase.Instance.GetFeaturesByCategory(category).Count;
+                    Debug.Log($"{category}: {learnedFeatures.Count}/{totalFeatures} learned");
+                    
+                    if (learnedFeatures.Count > 0)
+                    {
+                        Debug.Log("  Learned features in this category:");
+                        foreach (var feature in learnedFeatures)
+                        {
+                            Debug.Log($"    - {feature.partName} (isLearned={feature.isLearned})");
+                        }
+                    }
                 }
-                Debug.Log("=== END OF LEARNED FEATURE COUNTS ===");
+                Debug.Log("=== END OF LEARNED FEATURE STATUS ===");
+                
+                // Save changes
+                #if UNITY_EDITOR
+                UnityEditor.EditorUtility.SetDirty(FaceDatabase.Instance.gameObject);
+                #endif
             }
             else
             {
@@ -794,20 +821,21 @@ public class FaceGenerator : MonoBehaviour
     // Add this method to enforce only one hair type per face
     // Fix for FaceGenerator.cs - EnforceHairConsistency
     // Modify ApplySetFeatures method to ensure set features are prioritized
+    // Modify the existing ApplySetFeatures method in FaceGenerator.cs
     private void ApplySetFeatures(Face face, List<FacialFeature> features)
     {
-        // Track categories we're applying from the set
-        HashSet<string> categoriesFromSet = new HashSet<string>();
-        
+        // Initialize the categoriesFromSet collection if it doesn't exist
+        if (face.categoriesFromSet == null)
+        {
+            face.categoriesFromSet = new HashSet<string>();
+        }
+    
         foreach (FacialFeature feature in features)
         {
             face.SetFeature(feature.category, feature);
-            categoriesFromSet.Add(feature.category);
-            Debug.Log($"Applied set feature: {feature.category}:{feature.partName} (Learned: {feature.isLearned})");
+            face.categoriesFromSet.Add(feature.category);
+            Debug.Log($"Applied set feature: {feature.category}:{feature.partName}");
         }
-        
-        // Store this information directly on the face for EnforceHairConsistency to use
-        face.categoriesFromSet = categoriesFromSet;
     }
 
     // Then modify EnforceHairConsistency to respect set features
@@ -825,14 +853,13 @@ public class FaceGenerator : MonoBehaviour
         // If we get here, both hair types are present
         Debug.Log("Both hair types present, enforcing consistency");
         
-        // IMPORTANT: Check if either hair type comes from a learning set first
-        // We should preserve those regardless
+        // Check if either hair type comes from a set
         bool frontHairFromSet = face.categoriesFromSet != null && 
-                                face.categoriesFromSet.Contains("FrontHair");
+                               face.categoriesFromSet.Contains("FrontHair");
         bool backHairFromSet = face.categoriesFromSet != null && 
-                               face.categoriesFromSet.Contains("BackHair");
+                              face.categoriesFromSet.Contains("BackHair");
         
-        // If front hair is from a set but back hair isn't, keep front hair
+        // If front hair is from a set but back hair isn't
         if (frontHairFromSet && !backHairFromSet)
         {
             Debug.Log("Keeping front hair (from set)");
@@ -840,16 +867,16 @@ public class FaceGenerator : MonoBehaviour
             return;
         }
         
-        // If back hair is from a set but front hair isn't, keep back hair
-        if (!frontHairFromSet && backHairFromSet)
+        // If back hair is from a set but front hair isn't
+        if (backHairFromSet && !frontHairFromSet)
         {
             Debug.Log("Keeping back hair (from set)");
             face.frontHair = null;
             return;
         }
         
-        // If both are from sets (shouldn't happen normally) or neither is from a set,
-        // then check if they're from learning sets as before
+        // If both are from sets (shouldn't normally happen) or neither is from a set,
+        // continue with the existing logic
         bool frontHairFromLearningSet = IsFeatureFromLearningSet(face.frontHair);
         bool backHairFromLearningSet = IsFeatureFromLearningSet(face.backHair);
         

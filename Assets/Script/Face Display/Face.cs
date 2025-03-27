@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class Face
@@ -38,11 +39,7 @@ public class Face
         {
             clone.categoriesFromSet = new HashSet<string>(this.categoriesFromSet);
         }
-        else
-        {
-            clone.categoriesFromSet = new HashSet<string>();
-        }
-        
+    
         return clone;
     }
     
