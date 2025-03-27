@@ -4504,10 +4504,10 @@ MonoBehaviour:
           isLearned: 0
       rightPart:
         features:
-        - id: 32ba274f-b1fa-469a-9e88-7e5ee030715d
-          category: FrontHair
-          partName: FHair_Spiky_Front_4Spikes
-          sprite: {fileID: -6128269367414971308, guid: 6f6e25781a65c4b609c366e83f375e26, type: 3}
+        - id: bb250f02-2c78-495c-8441-65fa8b6aead1
+          category: BackHair
+          partName: BHair_Spiky_Back_5Spikes
+          sprite: {fileID: 5267767170793138143, guid: 6db1a5dffe47f4c95bfbc13a6625f09a, type: 3}
           isLearned: 0
       isLearned: 0
     isLearned: 0

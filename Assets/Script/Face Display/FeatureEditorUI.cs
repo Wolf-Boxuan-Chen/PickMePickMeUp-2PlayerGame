@@ -573,6 +573,12 @@ public class FeatureEditorUI : EditorWindow
         }
         else
         {
+            // Create a copy of the features list for safe iteration
+            List<FacialFeature> featuresToDisplay = new List<FacialFeature>(part.features);
+            
+            // Also track features to remove
+            List<FacialFeature> featuresToRemove = new List<FacialFeature>();
+
             foreach (FacialFeature feature in part.features)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -581,12 +587,17 @@ public class FeatureEditorUI : EditorWindow
                 
                 if (GUILayout.Button("Remove", GUILayout.Width(60)))
                 {
-                    part.features.Remove(feature);
-                    EditorUtility.SetDirty(faceDatabase);
-                    break;
+                    featuresToRemove.Add(feature);
                 }
                 
                 EditorGUILayout.EndHorizontal();
+            }
+            
+            // Process removals after iteration is complete
+            foreach (FacialFeature featureToRemove in featuresToRemove)
+            {
+                part.features.Remove(featureToRemove);
+                EditorUtility.SetDirty(FaceDatabase.Instance.gameObject);
             }
         }
         

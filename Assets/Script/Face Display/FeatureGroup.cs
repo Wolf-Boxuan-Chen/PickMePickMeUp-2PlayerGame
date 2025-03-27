@@ -35,14 +35,28 @@ public class FeatureGroup
     }
     
     // Get next unlearned set
+    // In FeatureGroup.cs
     public FaceSet GetNextUnlearnedSet()
     {
+        // Log details for debugging
+        int unlearnedSetsCount = 0;
         foreach (var set in sets)
         {
             if (!set.isLearned)
-                return set;
+                unlearnedSetsCount++;
         }
-        
+        Debug.Log($"Looking for next unlearned set in group {groupName} ({unlearnedSetsCount} unlearned sets)");
+    
+        foreach (var set in sets)
+        {
+            if (!set.isLearned)
+            {
+                Debug.Log($"Found unlearned set in group {groupName}");
+                return set;
+            }
+        }
+    
+        Debug.LogWarning($"No unlearned sets found in group {groupName}, but group is not marked as learned");
         return null; // All sets learned
     }
 }

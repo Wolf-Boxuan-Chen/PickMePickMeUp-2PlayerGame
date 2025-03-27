@@ -60,14 +60,14 @@ public class FaceGenerator : MonoBehaviour
         currentActiveSet = null;
         currentActiveGroup = null;
         
-        if (rng < 0.3f)
+        if (rng < 0.01f)
         {
             // 30% chance: Generate identical faces
             generationMethod = "Identical Learned Faces";
             Debug.Log($"Generating {generationMethod}");
             GenerateIdenticalLearnedFaces();
         }
-        else if (rng < 0.5f)
+        else if (rng < 0.02f)
         {
             // 30% chance: Generate faces with differences
             generationMethod = "Different Learned Faces";
@@ -338,7 +338,8 @@ public class FaceGenerator : MonoBehaviour
         }
         
         // Try to select an unlearned group
-        FeatureGroup selectedGroup = SelectUnlearnedGroup();
+        // Use the priority function to select an unlearned group
+        FeatureGroup selectedGroup = GetPriorityUnlearnedGroup();
         
         if (selectedGroup == null)
         {
