@@ -6,6 +6,23 @@ public class FaceDatabase : MonoBehaviour
 {
     // Static accessor
     private static FaceDatabase _instance;
+    
+    // Add weights to the FaceDatabase for each category
+    public Dictionary<string, float> CategoryWeights = new Dictionary<string, float>()
+    {
+        {"FaceShape", 10f},
+        {"Eye", 1.5f},
+        {"Nose", 1.2f},
+        {"Mouth", 1.5f},
+        {"FrontHair", 0.5f},
+        {"BackHair", 0.5f},
+        {"Ear", 0.4f},
+        {"Shoulder", 0.6f},
+        {"Background", 1.0f},
+        {"PhoneCase", 1.0f}
+    };
+    // Update feature selection method to use weights
+    
     public static FaceDatabase Instance
     {
         get
@@ -84,22 +101,28 @@ public class FaceDatabase : MonoBehaviour
     // Get a random learned feature from a category
     public FacialFeature GetRandomLearnedFeature(string category)
     {
-        var features = GetLearnedFeatures(category);
-        
-        if (features.Count == 0)
+        List<FacialFeature> learnedFeatures = GetLearnedFeatures(category);
+    
+        // First, try to find a learned feature
+        if (learnedFeatures.Count > 0)
         {
-            // Fallback to any feature if none learned
-            features = GetFeaturesByCategory(category);
-            
-            if (features.Count == 0)
-            {
-                Debug.LogWarning($"No features available for category: {category}");
-                return null;
-            }
+            int randomIndex = Random.Range(0, learnedFeatures.Count);
+            return learnedFeatures[randomIndex];
         }
-        
-        int randomIndex = Random.Range(0, features.Count);
-        return features[randomIndex];
+    
+        // Log a warning if no learned features are available for critical features
+        Debug.LogWarning($"No learned {category} features available! Falling back to unlearned feature.");
+    
+        // If no learned features, fall back to any feature
+        List<FacialFeature> allFeatures = GetFeaturesByCategory(category);
+        if (allFeatures.Count > 0)
+        {
+            int randomIndex = Random.Range(0, allFeatures.Count);
+            return allFeatures[randomIndex];
+        }
+    
+        // If no features at all, return null
+        return null;
     }
     
     // Check if a group has all sets learned and update its learned status

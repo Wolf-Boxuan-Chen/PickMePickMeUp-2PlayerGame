@@ -8,29 +8,39 @@ public class FaceSet
     public SetPart rightPart = new SetPart();
     public bool isLearned = false;
     
-    // Check if the parts are identical
+     // Update FaceSet.AreFacesIdentical to be more robust
     public bool AreFacesIdentical()
     {
-        // If counts differ, not identical
-        if (leftPart.features.Count != rightPart.features.Count)
-            return false;
+        // Compare features by category - now more accurate
+        Dictionary<string, string> leftFeatureIds = new Dictionary<string, string>();
+        Dictionary<string, string> rightFeatureIds = new Dictionary<string, string>();
         
-        // Create lookup by category
-        Dictionary<string, string> leftFeatures = new Dictionary<string, string>();
-        
-        foreach (var feature in leftPart.features)
+        foreach (FacialFeature feature in leftPart.features)
         {
-            leftFeatures[feature.category] = feature.id;
+            leftFeatureIds[feature.category] = feature.id;
         }
         
-        // Compare with right features
-        foreach (var feature in rightPart.features)
+        foreach (FacialFeature feature in rightPart.features)
         {
-            if (!leftFeatures.ContainsKey(feature.category))
+            rightFeatureIds[feature.category] = feature.id;
+        }
+        
+        // Check if all categories match
+        foreach (string category in FaceDatabase.Instance.FeatureCategories)
+        {
+            bool leftHasFeature = leftFeatureIds.ContainsKey(category);
+            bool rightHasFeature = rightFeatureIds.ContainsKey(category);
+            
+            // If one has the feature but the other doesn't
+            if (leftHasFeature != rightHasFeature)
                 return false;
                 
-            if (leftFeatures[feature.category] != feature.id)
-                return false;
+            // If both have the feature, compare IDs
+            if (leftHasFeature && rightHasFeature)
+            {
+                if (leftFeatureIds[category] != rightFeatureIds[category])
+                    return false;
+            }
         }
         
         return true;

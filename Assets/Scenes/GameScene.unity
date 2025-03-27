@@ -902,7 +902,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 280, y: -162}
+  m_AnchoredPosition: {x: -25, y: -735}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &336894748
@@ -2986,9 +2986,9 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -3018,7 +3018,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: -8.270863, z: -353.10034, w: -67.8208}
+  m_margin: {x: 0, y: -14.278198, z: -353.10034, w: -67.8208}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3947,7 +3947,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 282, y: 23}
+  m_AnchoredPosition: {x: -14, y: -527}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &943431377
@@ -4478,7 +4478,7 @@ MonoBehaviour:
           isLearned: 0
       isLearned: 0
     isLearned: 0
-    selectionChance: 0.548
+    selectionChance: 0.662
     flipSides: 0
 --- !u!4 &955429546
 Transform:
@@ -4701,7 +4701,7 @@ MonoBehaviour:
   successIcon: {fileID: -7880222053034368852, guid: 0b7e7b779fb7f4f6db74086519716f46, type: 3}
   failureIcon: {fileID: 8080859955201638781, guid: aef4b8f95e5ec4ec2b99c58a449f10bc, type: 3}
   leftTimerText: {fileID: 1726326322}
-  rightTimerText: {fileID: 2145562571}
+  rightTimerText: {fileID: 685739212}
   leftLifeImages:
   - {fileID: 1424469574}
   - {fileID: 450947983}
@@ -9180,7 +9180,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 209.90167, y: 86.90169}
+  m_AnchoredPosition: {x: -290, y: -602}
   m_SizeDelta: {x: 61.8034, y: 61.8034}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1826022981

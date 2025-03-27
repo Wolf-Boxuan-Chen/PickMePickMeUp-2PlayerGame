@@ -2,6 +2,10 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEditor;
+
+#if UNITY_EDITOR
+
 
 public class GameManager : MonoBehaviour
 {
@@ -289,7 +293,12 @@ public class GameManager : MonoBehaviour
         else
         {
             // Didn't hang up on a scammer - lose a life
-            resultMessage = scammerCompletedMessage;
+            string differenceFeedback = faceGenerator.GetDifferenceFeedback();
+        	resultMessage = scammerCompletedMessage;
+        
+        	if (!string.IsNullOrEmpty(differenceFeedback))
+            	resultMessage += "\n" + differenceFeedback + "!";
+
             livesRemaining--;
             panelManager.UpdateLives(livesRemaining);
         }
@@ -323,4 +332,31 @@ public class GameManager : MonoBehaviour
         
         Debug.Log($"Saved game over data - Calls: {callCount}, Money: ${playerMoney:F2}");
     }
+	
+	
+	// In GameManager.cs
+	[ContextMenu("Force Learn All Features")]
+	public void ForceLearnAllFeatures()
+	{
+    	var features = FindFirstObjectByType<FaceDatabase>().GetFeaturesByCategory("All");
+    	foreach (var feature in features)
+    	{
+        	feature.isLearned = true;
+    	}
+    	Debug.Log($"Forced {features.Count} features to learned state");
+    	EditorUtility.SetDirty(FindFirstObjectByType<FaceDatabase>());
+	}
+
+	[ContextMenu("Show Face Feature Counts")]
+	public void ShowFeatureCounts()
+	{
+    	var db = FindFirstObjectByType<FaceDatabase>();
+    	foreach (string category in db.FeatureCategories)
+    	{
+        	int total = db.GetFeaturesByCategory(category).Count;
+        	int learned = db.GetLearnedFeatures(category).Count;
+        	Debug.Log($"{category}: {learned}/{total} learned");
+    	}
+	}
 }
+#endif
