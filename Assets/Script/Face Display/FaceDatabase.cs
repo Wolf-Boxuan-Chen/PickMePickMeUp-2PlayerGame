@@ -232,6 +232,7 @@ public class FaceDatabase : MonoBehaviour
     // Get a random learned feature from a category
     // Fix for FaceDatabase.cs - GetRandomLearnedFeature
     // In GetRandomLearnedFeature method in FaceDatabase.cs, adjust to report cache status
+    // In FaceDatabase.cs
     public FacialFeature GetRandomLearnedFeature(string category)
     {
         List<FacialFeature> learnedFeatures = GetLearnedFeatures(category);
@@ -241,9 +242,7 @@ public class FaceDatabase : MonoBehaviour
         {
             int randomIndex = Random.Range(0, learnedFeatures.Count);
             FacialFeature selected = learnedFeatures[randomIndex];
-            // Use cache-aware method to check learned status
-            bool isCacheLearned = selected.isLearned;
-            Debug.Log($"Selected learned feature: {category}:{selected.partName} (Object.isLearned={selected.isLearned}, Cache={isCacheLearned})");
+            Debug.Log($"Selected learned feature: {category}:{selected.partName} (isLearned={selected.isLearned})");
             return selected;
         }
 
@@ -376,36 +375,36 @@ public class FaceDatabase : MonoBehaviour
     }
     
     // Add this debug method to track learning status
+    // Fix the debug method in FaceDatabase.cs
     public void DebugLearningStatus(bool verbose = false)
     {
         Debug.Log("=== LEARNING STATUS DEBUG ===");
-        
+    
         // Count learned features by category
         foreach (string category in FeatureCategories)
         {
             List<FacialFeature> learnedFeatures = GetLearnedFeatures(category);
             int totalFeatures = GetFeaturesByCategory(category).Count;
-            
+        
             Debug.Log($"{category}: {learnedFeatures.Count}/{totalFeatures} learned");
-            
+        
             // If verbose, list individual learned features
             if (verbose && learnedFeatures.Count > 0)
             {
                 foreach (FacialFeature feature in learnedFeatures)
                 {
-                    // Show both the actual isLearned property and the cached status
-                    bool isCacheLearned = feature.isLearned; // Adjust to your actual method name
-                    Debug.Log($"  - {feature.partName} (Object.isLearned={feature.isLearned}, Cache={cachedStatus})");
+                    // Show only the isLearned property
+                    Debug.Log($"  - {feature.partName} (Object.isLearned={feature.isLearned})");
                 }
             }
         }
-        
+    
         // Count learned groups and sets
         int learnedGroups = GetLearnedGroups().Count;
         int totalGroups = GetLearnedGroups().Count + GetUnlearnedGroups().Count;
-        
+    
         Debug.Log($"Groups: {learnedGroups}/{totalGroups} learned");
-        
+    
         // If verbose, show details for each group
         if (verbose)
         {
@@ -413,23 +412,23 @@ public class FaceDatabase : MonoBehaviour
             {
                 Debug.Log($"  Learned Group: {group.groupName}");
             }
-            
+        
             foreach (FeatureGroup group in GetUnlearnedGroups())
             {
                 // Count learned/unlearned sets in this group
                 int learnedSets = 0;
                 foreach (FaceSet set in group.sets)
                 {
-                    if (set.isLearned) // Adjust to your actual method name
+                    if (set.isLearned)
                     {
                         learnedSets++;
                     }
                 }
-                
+            
                 Debug.Log($"  Unlearned Group: {group.groupName} ({learnedSets}/{group.sets.Count} sets learned)");
             }
         }
-        
+    
         Debug.Log("=== END OF LEARNING STATUS DEBUG ===");
     }
     

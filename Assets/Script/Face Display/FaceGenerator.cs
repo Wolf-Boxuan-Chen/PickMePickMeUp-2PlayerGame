@@ -1338,7 +1338,7 @@ public class FaceGenerator : MonoBehaviour
                 {
                     actualCount++;
                     FacialFeature feature = testFace.GetFeature(category);
-                    Debug.Log($"  - Added {category}: {feature.partName} (Learned: {feature.isLearned})");
+                    Debug.Log($"Added required feature: {category}:{feature.partName} (isLearned={feature.isLearned})");
                 }
             }
             
