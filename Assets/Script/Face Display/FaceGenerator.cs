@@ -558,6 +558,18 @@ public class FaceGenerator : MonoBehaviour
         Debug.Log($"Final face has {actualFeatureCount - 2} facial features (plus BG and Phone)");
     }
     
+<<<<<<< HEAD
+=======
+    // Apply a list of features to a face
+    private void ApplySetFeatures(Face face, List<FacialFeature> features)
+    {
+        foreach (FacialFeature feature in features)
+        {
+            face.SetFeature(feature.category, feature);
+        }
+    }
+    
+>>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
     // Update ReplaceFeatureFromLearnedSet to return if it successfully changed the feature
     // Replace a feature from a learned set
     private bool ReplaceFeatureFromLearnedSet(Face face, string category)
@@ -820,6 +832,7 @@ public class FaceGenerator : MonoBehaviour
     
     // Add this method to enforce only one hair type per face
     // Fix for FaceGenerator.cs - EnforceHairConsistency
+<<<<<<< HEAD
     // Modify ApplySetFeatures method to ensure set features are prioritized
     // Modify the existing ApplySetFeatures method in FaceGenerator.cs
     private void ApplySetFeatures(Face face, List<FacialFeature> features)
@@ -839,19 +852,17 @@ public class FaceGenerator : MonoBehaviour
     }
 
     // Then modify EnforceHairConsistency to respect set features
+=======
+>>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
     private void EnforceHairConsistency(Face face, bool preserveLearningFeatures = true)
     {
-        // Skip if both hair types are null
-        if (face.frontHair == null && face.backHair == null)
+        // If one or both hair types are null, no need to enforce consistency
+        if (face.frontHair == null || face.backHair == null)
             return;
-        
-        // Skip if only one hair type is present
-        if ((face.frontHair != null && face.backHair == null) || 
-            (face.frontHair == null && face.backHair != null))
-            return;
-        
-        // If we get here, both hair types are present
+    
+        // If we get here, both hair types are present - we need to remove one
         Debug.Log("Both hair types present, enforcing consistency");
+<<<<<<< HEAD
         
         // Check if either hair type comes from a set
         bool frontHairFromSet = face.categoriesFromSet != null && 
@@ -877,9 +888,12 @@ public class FaceGenerator : MonoBehaviour
         
         // If both are from sets (shouldn't normally happen) or neither is from a set,
         // continue with the existing logic
+=======
+
+>>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
         bool frontHairFromLearningSet = IsFeatureFromLearningSet(face.frontHair);
         bool backHairFromLearningSet = IsFeatureFromLearningSet(face.backHair);
-        
+
         // If preserving learning features and one is from a learning set
         if (preserveLearningFeatures)
         {
