@@ -32,12 +32,15 @@ public class Face
         clone.phoneCase = this.phoneCase;
         
 <<<<<<< HEAD
+<<<<<<< HEAD
         // Clone the categories from set
         if (this.categoriesFromSet != null)
         {
             clone.categoriesFromSet = new HashSet<string>(this.categoriesFromSet);
         }
     
+=======
+>>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
 =======
 >>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
         return clone;

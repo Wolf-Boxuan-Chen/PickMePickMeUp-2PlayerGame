@@ -833,6 +833,7 @@ public class FaceGenerator : MonoBehaviour
     // Add this method to enforce only one hair type per face
     // Fix for FaceGenerator.cs - EnforceHairConsistency
 <<<<<<< HEAD
+<<<<<<< HEAD
     // Modify ApplySetFeatures method to ensure set features are prioritized
     // Modify the existing ApplySetFeatures method in FaceGenerator.cs
     private void ApplySetFeatures(Face face, List<FacialFeature> features)
@@ -854,6 +855,8 @@ public class FaceGenerator : MonoBehaviour
     // Then modify EnforceHairConsistency to respect set features
 =======
 >>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
+=======
+>>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
     private void EnforceHairConsistency(Face face, bool preserveLearningFeatures = true)
     {
         // If one or both hair types are null, no need to enforce consistency
@@ -862,6 +865,7 @@ public class FaceGenerator : MonoBehaviour
     
         // If we get here, both hair types are present - we need to remove one
         Debug.Log("Both hair types present, enforcing consistency");
+<<<<<<< HEAD
 <<<<<<< HEAD
         
         // Check if either hair type comes from a set
@@ -888,6 +892,9 @@ public class FaceGenerator : MonoBehaviour
         
         // If both are from sets (shouldn't normally happen) or neither is from a set,
         // continue with the existing logic
+=======
+
+>>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
 =======
 
 >>>>>>> parent of d5cb6bb (Continue Debugging Face Generation)
