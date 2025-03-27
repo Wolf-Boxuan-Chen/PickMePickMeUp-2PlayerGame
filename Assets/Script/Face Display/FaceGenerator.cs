@@ -561,10 +561,18 @@ public class FaceGenerator : MonoBehaviour
     // Apply a list of features to a face
     private void ApplySetFeatures(Face face, List<FacialFeature> features)
     {
+        // Track categories we're applying from the set
+        HashSet<string> categoriesFromSet = new HashSet<string>();
+    
         foreach (FacialFeature feature in features)
         {
             face.SetFeature(feature.category, feature);
+            categoriesFromSet.Add(feature.category);
+            Debug.Log($"Applied set feature: {feature.category}:{feature.partName} (Learned: {feature.isLearned})");
         }
+    
+        // Store this information directly on the face for EnforceHairConsistency to use
+        face.categoriesFromSet = categoriesFromSet;
     }
     
     // Update ReplaceFeatureFromLearnedSet to return if it successfully changed the feature
@@ -785,18 +793,66 @@ public class FaceGenerator : MonoBehaviour
     
     // Add this method to enforce only one hair type per face
     // Fix for FaceGenerator.cs - EnforceHairConsistency
+    // Modify ApplySetFeatures method to ensure set features are prioritized
+    private void ApplySetFeatures(Face face, List<FacialFeature> features)
+    {
+        // Track categories we're applying from the set
+        HashSet<string> categoriesFromSet = new HashSet<string>();
+        
+        foreach (FacialFeature feature in features)
+        {
+            face.SetFeature(feature.category, feature);
+            categoriesFromSet.Add(feature.category);
+            Debug.Log($"Applied set feature: {feature.category}:{feature.partName} (Learned: {feature.isLearned})");
+        }
+        
+        // Store this information directly on the face for EnforceHairConsistency to use
+        face.categoriesFromSet = categoriesFromSet;
+    }
+
+    // Then modify EnforceHairConsistency to respect set features
     private void EnforceHairConsistency(Face face, bool preserveLearningFeatures = true)
     {
-        // If one or both hair types are null, no need to enforce consistency
-        if (face.frontHair == null || face.backHair == null)
+        // Skip if both hair types are null
+        if (face.frontHair == null && face.backHair == null)
             return;
-    
-        // If we get here, both hair types are present - we need to remove one
+        
+        // Skip if only one hair type is present
+        if ((face.frontHair != null && face.backHair == null) || 
+            (face.frontHair == null && face.backHair != null))
+            return;
+        
+        // If we get here, both hair types are present
         Debug.Log("Both hair types present, enforcing consistency");
-
+        
+        // IMPORTANT: Check if either hair type comes from a learning set first
+        // We should preserve those regardless
+        bool frontHairFromSet = face.categoriesFromSet != null && 
+                                face.categoriesFromSet.Contains("FrontHair");
+        bool backHairFromSet = face.categoriesFromSet != null && 
+                               face.categoriesFromSet.Contains("BackHair");
+        
+        // If front hair is from a set but back hair isn't, keep front hair
+        if (frontHairFromSet && !backHairFromSet)
+        {
+            Debug.Log("Keeping front hair (from set)");
+            face.backHair = null;
+            return;
+        }
+        
+        // If back hair is from a set but front hair isn't, keep back hair
+        if (!frontHairFromSet && backHairFromSet)
+        {
+            Debug.Log("Keeping back hair (from set)");
+            face.frontHair = null;
+            return;
+        }
+        
+        // If both are from sets (shouldn't happen normally) or neither is from a set,
+        // then check if they're from learning sets as before
         bool frontHairFromLearningSet = IsFeatureFromLearningSet(face.frontHair);
         bool backHairFromLearningSet = IsFeatureFromLearningSet(face.backHair);
-
+        
         // If preserving learning features and one is from a learning set
         if (preserveLearningFeatures)
         {

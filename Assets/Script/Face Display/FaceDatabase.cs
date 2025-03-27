@@ -12,6 +12,7 @@ public class FaceDatabase : MonoBehaviour
     private Dictionary<string, bool> runtimeLearnedSets = new Dictionary<string, bool>();
     private Dictionary<string, bool> runtimeLearnedGroups = new Dictionary<string, bool>();
     
+    
     // Add weights to the FaceDatabase for each category
     public Dictionary<string, float> CategoryWeights = new Dictionary<string, float>()
     {

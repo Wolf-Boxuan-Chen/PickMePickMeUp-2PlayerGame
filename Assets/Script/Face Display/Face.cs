@@ -15,6 +15,9 @@ public class Face
     public FacialFeature background;
     public FacialFeature phoneCase;
     
+    // track which categories came from sets
+    public HashSet<string> categoriesFromSet = new HashSet<string>();
+    
     // Clone the face
     public Face Clone()
     {
@@ -29,6 +32,16 @@ public class Face
         clone.shoulder = this.shoulder;
         clone.background = this.background;
         clone.phoneCase = this.phoneCase;
+        
+        // Clone the categories from set
+        if (this.categoriesFromSet != null)
+        {
+            clone.categoriesFromSet = new HashSet<string>(this.categoriesFromSet);
+        }
+        else
+        {
+            clone.categoriesFromSet = new HashSet<string>();
+        }
         
         return clone;
     }
