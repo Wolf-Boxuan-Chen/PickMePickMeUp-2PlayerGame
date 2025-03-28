@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: 5721a270b34d847788e2bedf83b021e2
+guid: c42612dc37d9a4754934ff876d4e9271
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4131063608276423128
-    second: Game Over Screen 2_0
+      213: -1771537055213370995
+    second: IncomingCallPhoneBG_0
+  - first:
+      213: -565119752313989712
+    second: IncomingCallPhoneBG_1
+  - first:
+      213: 7620840607671354365
+    second: IncomingCallPhoneBG_2
+  - first:
+      213: 7889988672165444363
+    second: IncomingCallPhoneBG_3
+  - first:
+      213: -7135612803914808319
+    second: IncomingCallPhoneBG_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,13 +125,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Game Over Screen 2_0
+      name: IncomingCallPhoneBG_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1800
-        height: 3200
+        y: 2221
+        width: 127
+        height: 117
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +140,96 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 82ee32c19838ba6c0800000000000000
-      internalID: -4131063608276423128
+      spriteID: d81c09d2f6c3a67e0800000000000000
+      internalID: -1771537055213370995
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IncomingCallPhoneBG_1
+      rect:
+        serializedVersion: 2
+        x: 28
+        y: 130
+        width: 1554
+        height: 2155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b594c3549a4828f0800000000000000
+      internalID: -565119752313989712
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IncomingCallPhoneBG_2
+      rect:
+        serializedVersion: 2
+        x: 55
+        y: 2212
+        width: 72
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df38f1ed72aa2c960800000000000000
+      internalID: 7620840607671354365
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IncomingCallPhoneBG_3
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 111
+        width: 76
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0bf646f4eede7d60800000000000000
+      internalID: 7889988672165444363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: IncomingCallPhoneBG_4
+      rect:
+        serializedVersion: 2
+        x: 1488
+        y: 0
+        width: 165
+        height: 167
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 104cdeff5f539fc90800000000000000
+      internalID: -7135612803914808319
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Game Over Screen 2_0: -4131063608276423128
+      IncomingCallPhoneBG_0: -1771537055213370995
+      IncomingCallPhoneBG_1: -565119752313989712
+      IncomingCallPhoneBG_2: 7620840607671354365
+      IncomingCallPhoneBG_3: 7889988672165444363
+      IncomingCallPhoneBG_4: -7135612803914808319
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

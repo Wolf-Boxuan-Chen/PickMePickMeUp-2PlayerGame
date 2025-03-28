@@ -42,6 +42,10 @@ public class PanelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI leftIncomingCallText;
     [SerializeField] private TextMeshProUGUI rightIncomingCallText;
     
+    [Header("ScrollingBackground Controllers")]
+    [SerializeField] private ScrollingBackground backgroundControllerLeft;
+    [SerializeField] private ScrollingBackground backgroundControllerRight;
+    
     // Show incoming call screen
     public void ShowIncomingCallPanel()
     {
@@ -50,6 +54,12 @@ public class PanelManager : MonoBehaviour
         SetPanelsActive(resultPanels, false);
         SetPanelsActive(timerPanels, false);
         SetPanelsActive(livesPanels, false); // Hide lives during incoming call
+        
+        // Update backgrounds to "during call" state
+        if (backgroundControllerLeft != null)
+            backgroundControllerLeft.SetState("duringcall");
+        if (backgroundControllerRight != null)
+            backgroundControllerRight.SetState("duringcall");
     }
     
     // Show active call screen
@@ -60,6 +70,12 @@ public class PanelManager : MonoBehaviour
         SetPanelsActive(resultPanels, false);
         SetPanelsActive(timerPanels, true);
         SetPanelsActive(livesPanels, true); // Show lives during active call
+        
+        // Keep the "during call" state for active calls
+        if (backgroundControllerLeft != null)
+            backgroundControllerLeft.SetState("duringcall");
+        if (backgroundControllerRight != null)
+            backgroundControllerRight.SetState("duringcall");
     }
     
     // Show result panel
@@ -83,6 +99,13 @@ public class PanelManager : MonoBehaviour
         // Initialize countdown text
         if (leftCountdownText != null) leftCountdownText.text = "Next call in 5...";
         if (rightCountdownText != null) rightCountdownText.text = "Next call in 5...";
+        
+        // Update backgrounds based on success/failure
+        string state = isSuccess ? "success" : "failure";
+        if (backgroundControllerLeft != null)
+            backgroundControllerLeft.SetState(state);
+        if (backgroundControllerRight != null)
+            backgroundControllerRight.SetState(state);
     }
     
     // Update countdown text for next call

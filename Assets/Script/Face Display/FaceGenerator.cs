@@ -402,6 +402,29 @@ public class FaceGenerator : MonoBehaviour
         
         // Log detailed info about the selected set
         Debug.Log($"Selected set with {currentSet.leftPart.features.Count} left features and {currentSet.rightPart.features.Count} right features");
+        // Check if this group has any learned sets already
+        bool groupHasLearnedSets = false;
+        foreach (FaceSet set in selectedGroup.sets)
+        {
+            if (set.isLearned)
+            {
+                groupHasLearnedSets = true;
+                break;
+            }
+        }
+        
+        // Decide if we should flip sides - ONLY if the group has no learned sets yet
+        bool flipSides = false;
+        if (!groupHasLearnedSets)
+        {
+            // 50% chance to flip only for new groups
+            flipSides = (Random.value < 0.5f);
+            Debug.Log($"New group with no learned sets - flipping allowed: {flipSides}");
+        }
+        else
+        {
+            Debug.Log("Group already has learned sets - keeping consistent orientation (no flipping)");
+        }
         
         // Verify that the set has features to use before proceeding
         if (currentSet.leftPart.features.Count == 0 || currentSet.rightPart.features.Count == 0)
@@ -410,9 +433,6 @@ public class FaceGenerator : MonoBehaviour
             GenerateDifferentLearnedFaces();
             return;
         }
-        
-        // Decide if we should flip sides (50% chance)
-        bool flipSides = (Random.value < 0.5f);
         
         // Generate base face with learned features
         Face baseFace = new Face();

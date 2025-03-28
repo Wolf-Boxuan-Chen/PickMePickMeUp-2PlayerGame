@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     [Header("Score Display")]
     [SerializeField] private TMP_Text leftScoreText;
     [SerializeField] private TMP_Text rightScoreText;
+	
     
     private int callCount = 0;
     private float playerMoney;

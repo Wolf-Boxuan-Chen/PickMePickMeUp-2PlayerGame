@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5721a270b34d847788e2bedf83b021e2
+guid: 742df9f95171f40da975459b5e411da4
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4131063608276423128
-    second: Game Over Screen 2_0
+      213: -6051029832940481933
+    second: FacePart=Eyes, Number=Eyes_Singlebrow_Right_SmallEye_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Game Over Screen 2_0
+      name: FacePart=Eyes, Number=Eyes_Singlebrow_Right_SmallEye_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 1800
-        height: 3200
+        y: 135
+        width: 1417
+        height: 1993
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 82ee32c19838ba6c0800000000000000
-      internalID: -4131063608276423128
+      spriteID: 3729a4a3d6c660ca0800000000000000
+      internalID: -6051029832940481933
       vertices: []
       indices: 
       edges: []
@@ -147,8 +147,7 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable:
-      Game Over Screen 2_0: -4131063608276423128
+    nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

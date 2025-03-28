@@ -1655,8 +1655,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 128, y: -202}
-  m_SizeDelta: {x: 23, y: 23}
+  m_AnchoredPosition: {x: 298, y: -720}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1465791155
 MonoBehaviour:
@@ -1773,7 +1773,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   displayManager: {fileID: 1517586380}
   slideCount: 4
-  skipHoldTime: 2
+  skipHoldTime: 1.5
   gameSceneName: GameScene
 --- !u!1 &1652158075
 GameObject:
