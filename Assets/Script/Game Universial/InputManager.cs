@@ -7,6 +7,9 @@ public class InputManager : MonoBehaviour
     public event Action OnHangUpTriggered;
     public event Action OnPickUpTriggered;
     
+    public event Action OnIncomingCallRedButtonPressed;
+    public event Action OnActiveCallGreenButtonPressed;
+    
     [Header("Key Bindings")]
     [SerializeField] private KeyCode hangUpKey = KeyCode.LeftArrow;
     [SerializeField] private KeyCode pickUpKey = KeyCode.RightArrow;
@@ -92,6 +95,18 @@ public class InputManager : MonoBehaviour
                 OnPickUpTriggered?.Invoke();
             }
         }
+        
+        // In the method where you check for red button during incoming call
+		if (!inCallPhase && Input.GetKeyDown(hangUpKey)) {
+    		Debug.Log("Red button pressed during incoming call");
+    		OnIncomingCallRedButtonPressed?.Invoke();
+		}
+
+		// In the method where you check for green button during active call
+		if (inCallPhase && Input.GetKeyDown(pickUpKey)) {
+    		Debug.Log("Green button pressed during active call");
+    		OnActiveCallGreenButtonPressed?.Invoke();
+		}
     }
     
     // Update the button visuals based on current state

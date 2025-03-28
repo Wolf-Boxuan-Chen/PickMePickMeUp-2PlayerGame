@@ -18,8 +18,10 @@ public class GameManager : MonoBehaviour
     [Header("Game Settings")]
     [SerializeField] private float callDuration = 20f;
     [SerializeField] private float resultDuration = 5f;
+    [SerializeField] private float failureResultDuration = 7f;
     [SerializeField] private int maxLives = 2;
     [SerializeField] private string gameOverSceneName = "GameOverScene";
+    
     
     [Header("Result Messages")]
     [SerializeField] private string scammerHungUpMessage = "Scammer Avoided! Good job!";
@@ -37,9 +39,18 @@ public class GameManager : MonoBehaviour
 	
 	[Header("Sound Manager")]
 	[SerializeField] private SoundManager soundManager;
+
+	[Header("Reminder UI")]
+	[SerializeField] private GameObject leftReminderPanel;
+	[SerializeField] private GameObject rightReminderPanel;
+	[SerializeField] private TMP_Text leftReminderText;
+	[SerializeField] private TMP_Text rightReminderText;
+
+	private bool redButtonPressedOnce = false;
     
     private int callCount = 0;
     private float playerMoney;
+    private float flashTimer = 0f;
     
     private int livesRemaining;
     private float currentCallTime;
@@ -80,6 +91,10 @@ public class GameManager : MonoBehaviour
         
         // Show initial incoming call screen
         ShowIncomingCall();
+		
+		// In the Start method, subscribe to the new events:
+		inputManager.OnIncomingCallRedButtonPressed += HandleIncomingCallRedButton;
+		inputManager.OnActiveCallGreenButtonPressed += HandleActiveCallGreenButton;
     }
     
     private void OnDestroy()
@@ -89,6 +104,8 @@ public class GameManager : MonoBehaviour
         {
             inputManager.OnHangUpTriggered -= HangUpCall;
             inputManager.OnPickUpTriggered -= StartCall;
+			inputManager.OnIncomingCallRedButtonPressed -= HandleIncomingCallRedButton;
+    		inputManager.OnActiveCallGreenButtonPressed -= HandleActiveCallGreenButton;
         }
     }
     
@@ -99,9 +116,38 @@ public class GameManager : MonoBehaviour
         {
             currentCallTime -= Time.deltaTime;
             
-            // Update timer display
-            string timeText = Mathf.CeilToInt(currentCallTime).ToString();
-            panelManager.UpdateTimerText(timeText);
+            // Determine timer format based on remaining time
+            string timeText;
+            
+            if (currentCallTime <= 5.1f)
+            {
+                // Under 5.1 seconds - show with 2 decimal places and flash between bright and dark red
+                timeText = currentCallTime.ToString("F2") + " s";
+                
+                // Update flash timer - slower flashing
+                flashTimer += Time.deltaTime;
+                if (flashTimer >= 0.5f) { // Half-second flash cycle
+                    flashTimer = 0f;
+                }
+                
+                // Flash effect - alternate between bright red and darker red
+                if (flashTimer < 0.25f)
+                    panelManager.UpdateTimerText("<color=#FF0000>" + timeText + "</color>"); // Bright red
+                else
+                    panelManager.UpdateTimerText("<color=#AA0000>" + timeText + "</color>"); // Darker red
+            }
+            else if (currentCallTime <= 10f)
+            {
+                // Between 10 and 5.1 seconds - show with 2 decimal places
+                timeText = currentCallTime.ToString("F2") + "S";
+                panelManager.UpdateTimerText(timeText);
+            }
+            else
+            {
+                // Above 10 seconds - show as whole number
+                timeText = Mathf.CeilToInt(currentCallTime).ToString() + "S";
+                panelManager.UpdateTimerText(timeText);
+            }
             
             // Check if time is up
             if (currentCallTime <= 0)
@@ -315,7 +361,7 @@ public class GameManager : MonoBehaviour
         	resultMessage = scammerCompletedMessage;
         
         	if (!string.IsNullOrEmpty(differenceFeedback))
-            	resultMessage += "\n" + differenceFeedback + "!";
+            	resultMessage += "\n<color=red><b>" + differenceFeedback + "!</b></color>";
 
             livesRemaining--;
             panelManager.UpdateLives(livesRemaining);
@@ -335,7 +381,13 @@ public class GameManager : MonoBehaviour
         
         // Start result countdown
         resultActive = true;
-        resultCountdown = resultDuration;
+        // Use longer duration (7 seconds) when player fails by not hanging up on a scammer
+        if (!isFriend && !correct) {
+            resultCountdown = failureResultDuration; // 7 seconds for failure
+            Debug.Log("Player failed - showing result for 7 seconds");
+        } else {
+            resultCountdown = resultDuration; // Default duration for other cases
+        }
         
         // Save player's data for game over screen if they've lost
         if (livesRemaining <= 0)
@@ -344,6 +396,53 @@ public class GameManager : MonoBehaviour
         }
     }
     
+	// Then add these methods:
+    private void HandleIncomingCallRedButton() {
+        Debug.Log("HandleIncomingCallRedButton called");
+        if (!redButtonPressedOnce) {
+            Debug.Log("First red button press - showing reminder");
+            ShowReminder("Press Red Button Again to Restart the Game", 3f);
+            redButtonPressedOnce = true;
+            Invoke("ResetRedButton", 3f);
+        } else {
+            Debug.Log("Second red button press - restarting game");
+            SceneManager.LoadScene("StartInstructionScene");
+        }
+    }
+
+    private void HandleActiveCallGreenButton() {
+        Debug.Log("HandleActiveCallGreenButton called");
+        ShowReminder("Finish the call with your \"Friend\"!", 3f);
+    }
+
+    private void ShowReminder(string message, float duration) {
+        Debug.Log("ShowReminder called with message: " + message);
+        Debug.Log("leftReminderPanel null? " + (leftReminderPanel == null));
+        Debug.Log("rightReminderPanel null? " + (rightReminderPanel == null));
+        Debug.Log("leftReminderText null? " + (leftReminderText == null));
+        Debug.Log("rightReminderText null? " + (rightReminderText == null));
+        
+        if (leftReminderText != null && rightReminderText != null) {
+            leftReminderText.text = message;
+            rightReminderText.text = message;
+        }
+        
+        if (leftReminderPanel != null && rightReminderPanel != null) {
+            leftReminderPanel.SetActive(true);
+            rightReminderPanel.SetActive(true);
+        }
+        
+        Invoke("HideReminder", duration);
+    }
+
+    private void HideReminder() {
+        leftReminderPanel.SetActive(false);
+        rightReminderPanel.SetActive(false);
+    }
+
+    private void ResetRedButton() {
+        redButtonPressedOnce = false;
+    }
     // Save game over data for the GameOverManager to use
     private void SaveGameOverData()
     {

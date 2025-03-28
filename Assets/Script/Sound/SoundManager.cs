@@ -12,6 +12,11 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource musicSourceB;
     [SerializeField] private AudioSource sfxSource;
     
+    // Additional sources for amplification
+    private AudioSource musicAmplifierA;
+    private AudioSource musicAmplifierB;
+    private AudioSource sfxAmplifier;
+    
     [Header("Audio Clips")]
     [SerializeField] private AudioClip callIncomingRingtone;
     [SerializeField] private AudioClip basicBGM_NoSticks;
@@ -36,10 +41,13 @@ public class SoundManager : MonoBehaviour
     [Range(0f, 2f)] [SerializeField] private float failureVolume = 1.0f;
     
     [Header("Transition Settings")]
-    [SerializeField] private float transitionDuration = 2.5f; // Duration of music transition in seconds
+    [SerializeField] private float transitionDuration = 2.0f; // Duration of music transition in seconds
     
     private AudioSource currentMusicSource;
     private AudioSource nextMusicSource;
+    private AudioSource currentMusicAmplifier;
+    private AudioSource nextMusicAmplifier;
+    
     private AudioClip currentClip;
     private float currentClipVolume;
     
@@ -64,7 +72,7 @@ public class SoundManager : MonoBehaviour
     
     private void Start()
     {
-        // Set up two audio sources for music crossfading
+        // Set up music sources if not assigned
         if (musicSourceA == null)
         {
             GameObject sourceA = new GameObject("MusicSourceA");
@@ -81,11 +89,7 @@ public class SoundManager : MonoBehaviour
             musicSourceB.loop = true;
         }
         
-        // Set initial current music source
-        currentMusicSource = musicSourceA;
-        nextMusicSource = musicSourceB;
-        
-        // Set up SFX source
+        // Set up SFX source if not assigned
         if (sfxSource == null)
         {
             GameObject sourceSFX = new GameObject("SFXSource");
@@ -94,24 +98,98 @@ public class SoundManager : MonoBehaviour
             sfxSource.loop = false;
         }
         
+        // Create amplifier sources
+        GameObject ampA = new GameObject("MusicAmplifierA");
+        ampA.transform.parent = transform;
+        musicAmplifierA = ampA.AddComponent<AudioSource>();
+        musicAmplifierA.loop = true;
+        
+        GameObject ampB = new GameObject("MusicAmplifierB");
+        ampB.transform.parent = transform;
+        musicAmplifierB = ampB.AddComponent<AudioSource>();
+        musicAmplifierB.loop = true;
+        
+        GameObject sfxAmp = new GameObject("SFXAmplifier");
+        sfxAmp.transform.parent = transform;
+        sfxAmplifier = sfxAmp.AddComponent<AudioSource>();
+        sfxAmplifier.loop = false;
+        
+        // Set initial current music source
+        currentMusicSource = musicSourceA;
+        nextMusicSource = musicSourceB;
+        currentMusicAmplifier = musicAmplifierA;
+        nextMusicAmplifier = musicAmplifierB;
+        
         // Start with BasicBGM for intro
         PlayStartScreenBGM();
     }
     
-    // Apply volume changes in Update to catch inspector changes
+    // Apply volume changes in Update
     private void Update()
     {
-        // Check if volume parameters changed in inspector
+        // Update music volume if playing
         if (currentMusicSource != null && currentMusicSource.isPlaying)
         {
-            float targetVolume = CalculateMusicVolume(currentClip, currentClipVolume);
-            // Only update if there's a significant difference (avoids constant updating)
-            if (Mathf.Abs(currentMusicSource.volume - targetVolume) > 0.01f)
+            ApplyAmplifiedVolume(currentMusicSource, currentMusicAmplifier, 
+                                CalculateMusicVolume(currentClip, currentClipVolume));
+        }
+        
+        // Update next music source if in transition
+        if (nextMusicSource != null && nextMusicSource.isPlaying)
+        {
+            // Only update if volume > 0 (in transition)
+            if (nextMusicSource.volume > 0)
             {
-                currentMusicSource.volume = targetVolume;
-                Debug.Log($"Volume updated to {targetVolume} (Master: {masterVolume}, Music: {musicMasterVolume}, Clip: {currentClipVolume})");
+                float currentVol = nextMusicSource.volume;
+                ApplyAmplifiedVolume(nextMusicSource, nextMusicAmplifier, 
+                                    CalculateMusicVolume(nextMusicSource.clip, currentClipVolume) * 
+                                    (currentVol > 0 ? currentVol : 1));
             }
         }
+    }
+    
+    // Helper method to apply amplified volume
+    private void ApplyAmplifiedVolume(AudioSource mainSource, AudioSource amplifier, float targetVolume)
+    {
+        if (targetVolume <= 1.0f)
+        {
+            // Normal volume range
+            mainSource.volume = targetVolume;
+            
+            // Disable amplifier
+            if (amplifier.isPlaying)
+            {
+                amplifier.Stop();
+            }
+        }
+        else
+        {
+            // Set main source to maximum
+            mainSource.volume = 1.0f;
+            
+            // Setup amplifier
+            amplifier.clip = mainSource.clip;
+            amplifier.time = mainSource.time; // Sync playback position
+            amplifier.volume = targetVolume - 1.0f; // Additional volume
+            
+            // Ensure amplifier is playing in sync
+            if (!amplifier.isPlaying)
+            {
+                amplifier.Play();
+            }
+        }
+    }
+    
+    // Calculate music volume with all multipliers
+    private float CalculateMusicVolume(AudioClip clip, float baseVolume)
+    {
+        return baseVolume * musicMasterVolume * masterVolume;
+    }
+    
+    // Calculate SFX volume with all multipliers
+    private float CalculateSFXVolume(AudioClip clip, float baseVolume)
+    {
+        return baseVolume * sfxMasterVolume * masterVolume;
     }
     
     // Start/Menu Music
@@ -172,66 +250,111 @@ public class SoundManager : MonoBehaviour
     // Stop all audio
     public void StopAll()
     {
+        // Stop main sources
         musicSourceA.Stop();
         musicSourceB.Stop();
         sfxSource.Stop();
+        
+        // Stop amplifiers
+        musicAmplifierA.Stop();
+        musicAmplifierB.Stop();
+        sfxAmplifier.Stop();
     }
     
-    // Helper method to calculate music volume with all multipliers
-    private float CalculateMusicVolume(AudioClip clip, float baseVolume)
-    {
-        return baseVolume * musicMasterVolume * masterVolume;
-    }
-    
-    // Private helper methods
+    // Play music with volume control
     private void PlayMusic(AudioClip clip, float clipVolume)
     {
-        // Stop both sources
+        // Stop all music sources
         musicSourceA.Stop();
         musicSourceB.Stop();
+        musicAmplifierA.Stop();
+        musicAmplifierB.Stop();
         
         // Reset source selection
         currentMusicSource = musicSourceA;
         nextMusicSource = musicSourceB;
+        currentMusicAmplifier = musicAmplifierA;
+        nextMusicAmplifier = musicAmplifierB;
         
         // Store current clip info for volume updates
         currentClip = clip;
         currentClipVolume = clipVolume;
         
-        // Apply all volume multipliers
+        // Calculate volume
         float calculatedVolume = CalculateMusicVolume(clip, clipVolume);
         
-        // Play on current source
+        // Set clip to main source
         currentMusicSource.clip = clip;
-        currentMusicSource.volume = calculatedVolume;
+        
+        // Apply amplified volume
+        ApplyAmplifiedVolume(currentMusicSource, currentMusicAmplifier, calculatedVolume);
+        
+        // Play main source
         currentMusicSource.Play();
         
-        Debug.Log($"Playing {clip.name} at volume {calculatedVolume} (Base: {clipVolume}, Music: {musicMasterVolume}, Master: {masterVolume})");
+        Debug.Log($"Playing {clip.name} at volume {calculatedVolume}");
     }
     
-    // Crossfade coroutine for smooth transitions
+    // Crossfade coroutine with amplification support
     private IEnumerator CrossFadeToMusic(AudioClip newClip, float newClipVolume)
     {
         // Store for future reference
         currentClip = newClip;
         currentClipVolume = newClipVolume;
         
-        // Set up the next source with new clip
+        // Set up the next sources
         nextMusicSource.clip = newClip;
-        nextMusicSource.volume = 0f; // Start at zero volume
+        nextMusicSource.volume = 0f;
+        nextMusicAmplifier.clip = newClip;
+        nextMusicAmplifier.volume = 0f;
+        
+        // Start playing
         nextMusicSource.Play();
         
-        float startVolume = currentMusicSource.volume;
+        float startVolume = currentMusicSource.volume + (currentMusicAmplifier.isPlaying ? currentMusicAmplifier.volume : 0f);
         float targetVolume = CalculateMusicVolume(newClip, newClipVolume);
         float timeElapsed = 0f;
         
         while (timeElapsed < transitionDuration)
         {
-            // Fade out current music
-            currentMusicSource.volume = Mathf.Lerp(startVolume, 0f, timeElapsed / transitionDuration);
+            // Calculate current progress
+            float t = timeElapsed / transitionDuration;
             
-            // Fade in new music
-            nextMusicSource.volume = Mathf.Lerp(0f, targetVolume, timeElapsed / transitionDuration);
+            // Calculate current transition volumes
+            float oldVol = Mathf.Lerp(startVolume, 0f, t);
+            float newVol = Mathf.Lerp(0f, targetVolume, t);
+            
+            // Apply volumes with amplification
+            if (oldVol <= 1.0f)
+            {
+                currentMusicSource.volume = oldVol;
+                currentMusicAmplifier.volume = 0;
+            }
+            else
+            {
+                currentMusicSource.volume = 1.0f;
+                currentMusicAmplifier.volume = oldVol - 1.0f;
+            }
+            
+            // Apply new volumes with amplification
+            if (newVol <= 1.0f)
+            {
+                nextMusicSource.volume = newVol;
+                nextMusicAmplifier.volume = 0;
+            }
+            else
+            {
+                nextMusicSource.volume = 1.0f;
+                nextMusicAmplifier.volume = newVol - 1.0f;
+                
+                // Ensure amplifier is playing
+                if (!nextMusicAmplifier.isPlaying)
+                {
+                    nextMusicAmplifier.clip = newClip;
+                    nextMusicAmplifier.time = nextMusicSource.time;
+                    nextMusicAmplifier.Play();
+                }
+            }
             
             timeElapsed += Time.deltaTime;
             yield return null;
@@ -239,24 +362,47 @@ public class SoundManager : MonoBehaviour
         
         // Ensure final volumes are set correctly
         currentMusicSource.volume = 0f;
+        currentMusicAmplifier.volume = 0f;
         currentMusicSource.Stop();
-        nextMusicSource.volume = targetVolume;
+        currentMusicAmplifier.Stop();
+        
+        // Apply final volume to new source
+        ApplyAmplifiedVolume(nextMusicSource, nextMusicAmplifier, targetVolume);
         
         // Swap the sources for next transition
-        AudioSource temp = currentMusicSource;
+        AudioSource tempSource = currentMusicSource;
         currentMusicSource = nextMusicSource;
-        nextMusicSource = temp;
+        nextMusicSource = tempSource;
+        
+        AudioSource tempAmp = currentMusicAmplifier;
+        currentMusicAmplifier = nextMusicAmplifier;
+        nextMusicAmplifier = tempAmp;
         
         Debug.Log($"Completed transition to {newClip.name} at volume {targetVolume}");
     }
     
+    // Play SFX with amplification
     private void PlaySFX(AudioClip clip, float clipVolume)
     {
-        // Calculate final volume with all multipliers
-        float finalVolume = clipVolume * sfxMasterVolume * masterVolume;
-        sfxSource.PlayOneShot(clip, finalVolume);
+        float calculatedVolume = CalculateSFXVolume(clip, clipVolume);
         
-        Debug.Log($"Playing SFX {clip.name} at volume {finalVolume}");
+        if (calculatedVolume <= 1.0f)
+        {
+            // Standard volume - use normal PlayOneShot
+            sfxSource.PlayOneShot(clip, calculatedVolume);
+        }
+        else
+        {
+            // Need amplification
+            sfxSource.PlayOneShot(clip, 1.0f);
+            
+            // Use amplifier for additional volume
+            sfxAmplifier.clip = clip;
+            sfxAmplifier.volume = calculatedVolume - 1.0f;
+            sfxAmplifier.Play();
+        }
+        
+        Debug.Log($"Playing SFX {clip.name} at volume {calculatedVolume}");
     }
     
     // Master volume control
@@ -264,8 +410,6 @@ public class SoundManager : MonoBehaviour
     {
         masterVolume = Mathf.Clamp(volume, 0f, 2f);
         Debug.Log($"Master volume set to {masterVolume}");
-        
-        // No need to update here - will be caught in Update
     }
     
     // Music volume control
@@ -273,8 +417,6 @@ public class SoundManager : MonoBehaviour
     {
         musicMasterVolume = Mathf.Clamp(volume, 0f, 2f);
         Debug.Log($"Music volume set to {musicMasterVolume}");
-        
-        // No need to update here - will be caught in Update
     }
     
     // SFX volume control
@@ -289,7 +431,7 @@ public class SoundManager : MonoBehaviour
     public float GetMusicVolume() { return musicMasterVolume; }
     public float GetSFXVolume() { return sfxMasterVolume; }
     
-    // Individual volume controls for each clip
+    // Individual volume controls
     public void SetCallIncomingVolume(float volume)
     {
         callIncomingVolume = Mathf.Clamp(volume, 0f, 2f);
@@ -331,5 +473,22 @@ public class SoundManager : MonoBehaviour
     public void SetFailureVolume(float volume)
     {
         failureVolume = Mathf.Clamp(volume, 0f, 2f);
+    }
+    
+    // Method to manually test amplification
+    [ContextMenu("Test Amplification")]
+    private void TestAmplification()
+    {
+        // Toggle between normal and high volume
+        if (masterVolume <= 1.0f)
+        {
+            SetMasterVolume(2.0f);
+        }
+        else
+        {
+            SetMasterVolume(0.5f);
+        }
+        
+        Debug.Log($"TEST: Set master volume to {masterVolume}");
     }
 }
