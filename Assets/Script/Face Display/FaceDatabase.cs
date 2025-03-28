@@ -15,13 +15,13 @@ public class FaceDatabase : MonoBehaviour
     // Add weights to the FaceDatabase for each category
     public Dictionary<string, float> CategoryWeights = new Dictionary<string, float>()
     {
-        {"FaceShape", 10f},
+        {"FaceShape", 4f},
         {"Eye", 1.5f},
         {"Nose", 1.2f},
         {"Mouth", 1.5f},
         {"FrontHair", 0.5f},
         {"BackHair", 0.5f},
-        {"Ear", 0.4f},
+        {"Ear", 1.0f},
         {"Shoulder", 0.6f},
         {"Background", 1.0f},
         {"PhoneCase", 1.0f}

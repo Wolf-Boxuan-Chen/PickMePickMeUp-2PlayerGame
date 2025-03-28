@@ -27,14 +27,27 @@ public class GameOverManager : MonoBehaviour
         public TMP_Text rightMonitorText;
     }
 
-    [Header("UI Elements")]
+    [System.Serializable]
+    public class DualPanels
+    {
+        public GameObject leftPanel;
+        public GameObject rightPanel;
+    }
+
+    [Header("Game Over UI Elements")]
     [SerializeField] private DualTextElements gameOverText;
     [SerializeField] private DualTextElements rankingText;
     [SerializeField] private DualTextElements highScoresText;
     [SerializeField] private DualTextElements restartPromptText;
+    [SerializeField] private DualPanels gameOverPanels;
+    
+    [Header("Credits UI Elements")]
+    [SerializeField] private DualPanels creditsPanels;
+    [SerializeField] private DualTextElements resultInText;
     
     [Header("Navigation")]
     [SerializeField] private string startSceneName = "StartScene";
+    [SerializeField] private string gameSceneName = "GameScene";
     
     [Header("Settings")]
     [SerializeField] private int topScoresToShow = 5;
@@ -42,6 +55,17 @@ public class GameOverManager : MonoBehaviour
     
     private int currentCallCount;
     private float moneyLost;
+    
+    // Various result text options
+    private string[] scamResultTexts = new string[] {
+        "\"I promise to NEVER get scammed again after being scammed to <color=red>lose my one and only friend</color> and all my money - <color=red>${0}</color> - in just <color=red>{1}</color> phone calls.\"",
+        "\"I thought I was so smart until I got scammed and <color=red>lost everything I ever cared about</color> plus <color=red>${0}</color> after just <color=red>{1}</color> phone calls.\"",
+        "\"I'm never going to trust any call again. I got scammed and <color=red>lost my only friend</color> plus <color=red>${0}</color> after just <color=red>{1}</color> phone calls.\""
+    };
+    
+    // Current panel state tracking
+    private enum PanelState { GameOver, Credits }
+    private PanelState currentState = PanelState.GameOver;
     
     private void Start()
     {
@@ -52,26 +76,20 @@ public class GameOverManager : MonoBehaviour
         // Update the score and save to high scores
         UpdateHighScores(currentCallCount);
         
-        // Display game over information
-        DisplayGameOverInfo();
+        // Show game over info first
+        ShowGameOverPanel();
         
-        // Listen for restart input
+        // Listen for input
         StartCoroutine(WaitForRestartInput());
     }
     
-    private void DisplayGameOverInfo()
+    private void ShowGameOverPanel()
     {
-        // Format money in bold and italic
-        string moneyFormattedText = "<b>$" + moneyLost.ToString("F2") + "</b>";
+        // Display game over information
+        string gameOverMessage = "You lost your friend, your house, your car, your pet, your everything " +
+                                "after <color=red>" + currentCallCount + "</color> phone calls." ;
         
-        // Format call count in red and italic
-        string callCountFormattedText = "<color=red>" + currentCallCount.ToString() + "</color>";
-        
-        // Create the complete game over message with rich text formatting
-        string gameOverMessage = "You lost your one and only friend and all your money— " + 
-                                moneyFormattedText + " —and are declared broke after " + 
-                                callCountFormattedText + " calls.";
-        
+        // Show game over panel text
         SetDualText(gameOverText, gameOverMessage);
         
         // Show ranking with proper format
@@ -84,10 +102,44 @@ public class GameOverManager : MonoBehaviour
         string scoresText = GenerateHighScoresText(allScores, rank);
         SetDualText(highScoresText, scoresText);
         
-        // Set restart prompt
-        SetDualText(restartPromptText, "Press RIGHT arrow to play again");
+        // Set prompt for credits
+        SetDualText(restartPromptText, "Press Green Button to Continue →");
+        
+        // Show the game over panels, hide credits panels
+        SetPanelsActive(gameOverPanels, true);
+        SetPanelsActive(creditsPanels, false);
+        
+        currentState = PanelState.GameOver;
+    }
+
+    private void ShowCreditsPanel()
+    {
+        // Hide game over panels, show credits panels
+        SetPanelsActive(gameOverPanels, false);
+        SetPanelsActive(creditsPanels, true);
+        
+        // Randomly select one of the result text options
+        int randomTextIndex = Random.Range(0, scamResultTexts.Length);
+        string selectedResultText = string.Format(scamResultTexts[randomTextIndex], 
+                                                 moneyLost.ToString("F2"), 
+                                                 currentCallCount);
+        
+        // Set result text
+        SetDualText(resultInText, selectedResultText );
+        
+        currentState = PanelState.Credits;
     }
     
+    // Helper to set both panels' active state
+    private void SetPanelsActive(DualPanels panels, bool active)
+    {
+        if (panels.leftPanel != null)
+            panels.leftPanel.SetActive(active);
+            
+        if (panels.rightPanel != null)
+            panels.rightPanel.SetActive(active);
+    }
+
     // Helper to set text on both monitors
     private void SetDualText(DualTextElements elements, string text)
     {
@@ -104,6 +156,55 @@ public class GameOverManager : MonoBehaviour
             // Enable rich text for formatting
             elements.rightMonitorText.richText = true;
         }
+    }
+    
+    private IEnumerator WaitForRestartInput()
+    {
+        // Short delay to prevent accidental input
+        yield return new WaitForSeconds(1.0f);
+        
+        while (true)
+        {
+            // Handle right arrow (green button)
+            if (Input.GetKeyDown(KeyCode.RightArrow))
+            {
+                switch (currentState)
+                {
+                    case PanelState.GameOver:
+                        // Show credits panel
+                        ShowCreditsPanel();
+                        // Add a small delay to prevent double-input
+                        yield return new WaitForSeconds(0.5f);
+                        break;
+                        
+                    case PanelState.Credits:
+                        // Restart game
+                        RestartGame();
+                        break;
+                }
+            }
+            
+            // Handle left arrow (red button) - only in credits panel
+            if (Input.GetKeyDown(KeyCode.LeftArrow) && currentState == PanelState.Credits)
+            {
+                // Go to start screen
+                GoToStartScreen();
+            }
+            
+            yield return null;
+        }
+    }
+    
+    private void RestartGame()
+    {
+        // Load the game scene
+        SceneManager.LoadScene(gameSceneName);
+    }
+
+    private void GoToStartScreen()
+    {
+        // Load the start scene
+        SceneManager.LoadScene(startSceneName);
     }
     
     private void UpdateHighScores(int newScore)
@@ -304,29 +405,5 @@ public class GameOverManager : MonoBehaviour
         }
         
         return scoresText;
-    }
-    
-    private IEnumerator WaitForRestartInput()
-    {
-        // Short delay to prevent accidental restart
-        yield return new WaitForSeconds(1.0f);
-        
-        while (true)
-        {
-            // Check for right arrow key to restart
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                RestartGame();
-                break;
-            }
-            
-            yield return null;
-        }
-    }
-    
-    private void RestartGame()
-    {
-        // Load the start/tutorial scene to begin a new game
-        SceneManager.LoadScene(startSceneName);
     }
 }

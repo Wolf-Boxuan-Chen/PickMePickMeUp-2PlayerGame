@@ -4833,7 +4833,7 @@ MonoBehaviour:
     category: Nose
     partName: Nose_Round_Outlined
     sprite: {fileID: 6251908440293056542, guid: 74c5b8239866c46bbbe6df9e0d0f3a0a, type: 3}
-    isLearned: 0
+    isLearned: 1
   - id: 4c509485-6c56-486c-8d5a-9fa3974eb8c9
     category: Nose
     partName: Nose_Round_NotOutlined
