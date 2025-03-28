@@ -35,6 +35,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text leftScoreText;
     [SerializeField] private TMP_Text rightScoreText;
 	
+	[Header("Sound Manager")]
+	[SerializeField] private SoundManager soundManager;
     
     private int callCount = 0;
     private float playerMoney;
@@ -61,6 +63,10 @@ public class GameManager : MonoBehaviour
         // Reset call count for new game
         callCount = 0;
         UpdateCallCountDisplay();
+		
+		// Make sure we have a reference to the SoundManager
+    	if (soundManager == null)
+        soundManager = SoundManager.Instance;
         
         // Initialize the face generator
         if (faceGenerator != null)
@@ -162,6 +168,8 @@ public class GameManager : MonoBehaviour
         
         // Show incoming call UI
         panelManager.ShowIncomingCallPanel();
+		
+		soundManager.PlayIncomingRingtone();
         
         // Configure input for pickup phase
         inputManager.SetCallActive(false);
@@ -213,6 +221,9 @@ public class GameManager : MonoBehaviour
     {
         // Show the call interface
         panelManager.ShowCallActivePanel();
+		
+		// Add this after configuring call interface
+		soundManager.PlayDuringCallBGM();
         
         // Now reveal the faces
         faceManager.ShowFaces();
@@ -245,13 +256,18 @@ public class GameManager : MonoBehaviour
             resultMessage = friendHungUpMessage;
             livesRemaining--;
             panelManager.UpdateLives(livesRemaining);
+			soundManager.PlayFailureSFX();
         }
         else
         {
             // Hung up on a scammer - good job!
             resultMessage = scammerHungUpMessage;
             correct = true;
+			soundManager.PlaySuccessSFX();
         }
+		
+		// Transition music
+    	soundManager.TransitionToResultBGM();
         
         // Inform face generator about round completion
         if (faceGenerator != null)
@@ -290,6 +306,7 @@ public class GameManager : MonoBehaviour
             // Completed call with friend - good!
             resultMessage = friendCompletedMessage;
             correct = true;
+			soundManager.PlaySuccessSFX();
         }
         else
         {
@@ -302,7 +319,10 @@ public class GameManager : MonoBehaviour
 
             livesRemaining--;
             panelManager.UpdateLives(livesRemaining);
+			soundManager.PlayFailureSFX();
         }
+
+		soundManager.TransitionToResultBGM();
         
         // Inform face generator about round completion
         if (faceGenerator != null)

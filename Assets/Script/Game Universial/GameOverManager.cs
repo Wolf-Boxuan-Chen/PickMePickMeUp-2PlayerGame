@@ -52,6 +52,10 @@ public class GameOverManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private int topScoresToShow = 5;
     [SerializeField] private int maxStoredScores = 300;
+	
+	[Header("Sound Manager")]
+	[SerializeField] private SoundManager soundManager;
+
     
     private int currentCallCount;
     private float moneyLost;
@@ -81,6 +85,13 @@ public class GameOverManager : MonoBehaviour
         
         // Listen for input
         StartCoroutine(WaitForRestartInput());
+		
+		// Make sure we have a reference to the SoundManager
+    	if (soundManager == null)
+        	soundManager = SoundManager.Instance;
+        
+    	// Play end screen music
+    	soundManager.PlayEndScreenBGM();
     }
     
     private void ShowGameOverPanel()
@@ -197,12 +208,16 @@ public class GameOverManager : MonoBehaviour
     
     private void RestartGame()
     {
-        // Load the game scene
+		// Stop the music before loading the new scene
+        soundManager.StopAll();
+		// Load the game scene
         SceneManager.LoadScene(gameSceneName);
     }
 
     private void GoToStartScreen()
     {
+		// Stop the music before loading the new scene
+		soundManager.StopAll();
         // Load the start scene
         SceneManager.LoadScene(startSceneName);
     }

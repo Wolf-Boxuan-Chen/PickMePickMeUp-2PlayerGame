@@ -12,6 +12,10 @@ public class StartScreenManager : MonoBehaviour
     [SerializeField] private float skipHoldTime = 2.0f;
     [SerializeField] private string gameSceneName = "GameScene";
     
+    [Header("Sound Manager")]
+    [SerializeField] private SoundManager soundManager;
+
+    
     private int currentSlideIndex = 0;
     private bool titleScreenActive = true;
     private bool tutorialActive = false;
@@ -33,6 +37,13 @@ public class StartScreenManager : MonoBehaviour
             
         // Show title screen initially
         ShowTitleScreen();
+        
+        // Make sure we have a reference to the SoundManager
+        if (soundManager == null)
+            soundManager = SoundManager.Instance;
+        
+        // Play start screen music
+        soundManager.PlayStartScreenBGM();
     }
     
     private void Update()
@@ -231,6 +242,7 @@ public class StartScreenManager : MonoBehaviour
     private void ForceStartGame()
     {
         Debug.Log("FORCING GAME START: " + gameSceneName);
+        soundManager.StopAll();
         SceneManager.LoadScene(gameSceneName);
     }
     
