@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0c0fd5329a42641f78c7e443338ae6e9
+guid: b336f4142f9244f318bfa2e15fb826cc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4708530919354654206
-    second: FacePart=Nose, Number=0-Empty_0
+      213: 1964296098837629907
+    second: FacePart=Mouth, Number=Mouth_Smile_Open_Curve_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FacePart=Nose, Number=0-Empty_0
+      name: FacePart=Mouth, Number=Mouth_Smile_Open_Curve_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: efdd31e9cef085140800000000000000
-      internalID: 4708530919354654206
+      spriteID: 3db07e405e4924b10800000000000000
+      internalID: 1964296098837629907
       vertices: []
       indices: 
       edges: []

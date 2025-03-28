@@ -4038,8 +4038,8 @@ RectTransform:
   - {fileID: 828228809}
   - {fileID: 1552873940}
   - {fileID: 559308446}
-  - {fileID: 1396475492}
   - {fileID: 723923781}
+  - {fileID: 1396475492}
   - {fileID: 2020987741}
   - {fileID: 1735270382}
   - {fileID: 1898932912}
@@ -4341,6 +4341,236 @@ MonoBehaviour:
     partName: Face_Oval_Big_NoOutline
     sprite: {fileID: -5990731253454683941, guid: 4e931c457834f487697d1b324dac551f, type: 3}
     isLearned: 0
+  - id: 511878bd-6804-4e90-bc74-800e9979d1d6
+    category: Eye
+    partName: Eyes_Cross
+    sprite: {fileID: 4373222900869321235, guid: b278884cc28054887b4d34d180bc2f2c, type: 3}
+    isLearned: 0
+  - id: 00611a08-b8e2-43a3-8725-81fa8657f477
+    category: Eye
+    partName: Eyes_Cross_Big
+    sprite: {fileID: -214064085720313225, guid: 7f35a9b376bb34940aaf0b98736d0f10, type: 3}
+    isLearned: 0
+  - id: c99b4cd7-396c-4251-9839-a5837c9756dc
+    category: Eye
+    partName: Eyes_Cross_eyedrop_white
+    sprite: {fileID: 8487800611720092463, guid: 9d1f04e74b35c479baaadacf09868c20, type: 3}
+    isLearned: 0
+  - id: 917933ba-372a-43f0-b70c-89d5a7f85ec5
+    category: Eye
+    partName: Eyes_Cross_eyedrop_black
+    sprite: {fileID: -4025863408974056559, guid: a7315ab38f931462c9e358f8c610b13a, type: 3}
+    isLearned: 0
+  - id: a463b14a-b825-4b50-8f94-bbc74d470bda
+    category: Eye
+    partName: Eyes_Dotted_Eyelid
+    sprite: {fileID: -2948454636556622860, guid: b801f9033207247f6a39ecf682bf4e54, type: 3}
+    isLearned: 0
+  - id: 6e6b8915-dd47-48e3-9019-cf7f84f84728
+    category: Eye
+    partName: Eyes_BlackEye_Single
+    sprite: {fileID: -6523355460061452136, guid: 206de9b6a9e17435e8632985f51c85ce, type: 3}
+    isLearned: 0
+  - id: e0f1b857-853d-4679-a150-1e2b94072bc4
+    category: Eye
+    partName: Eyes_BlackEye_Single_CAPPED
+    sprite: {fileID: -112447072331494005, guid: 7af0eabd7911a43a89f8b3e9b043ea7e, type: 3}
+    isLearned: 0
+  - id: eef13c70-c897-40aa-8ed4-f05d46940833
+    category: Mouth
+    partName: Mouth_Smile_Open
+    sprite: {fileID: -1183503993918261553, guid: 262b078729ab441a4874f55b923968b1, type: 3}
+    isLearned: 0
+  - id: 39a45263-5a51-44f0-9a14-8ef8710dbd58
+    category: Mouth
+    partName: Mouth_Kiss_ToRight
+    sprite: {fileID: -5571732540192804806, guid: 0220c22a820b1486990d8b67aa3982fa, type: 3}
+    isLearned: 0
+  - id: 84c513f2-ade0-4ba1-aa27-6b4436012749
+    category: Mouth
+    partName: Mouth_Kiss_ToLeft
+    sprite: {fileID: 7856969686412800489, guid: 8467703a5871a4dfd944d6bbe32240e1, type: 3}
+    isLearned: 0
+  - id: efec063f-6582-4487-8527-099e4f9f16d9
+    category: Mouth
+    partName: Mouth_Smile_Wide
+    sprite: {fileID: 2386306301835050700, guid: cc80001327a3b4710ac88f486f7b62d7, type: 3}
+    isLearned: 0
+  - id: a28bac7a-37c6-4e0d-820c-a07ad56fdcc4
+    category: Nose
+    partName: Nose_TriangleBot
+    sprite: {fileID: 3082956742508864695, guid: 0065c5731aa4d4cf2b178358b2f5d863, type: 3}
+    isLearned: 0
+  - id: d9dcc19e-d04e-4ea3-95e9-80c5ff9864e4
+    category: Nose
+    partName: Nose_Eyedrop
+    sprite: {fileID: 7166831213633884016, guid: e3edf0099dff94233948f91af56b46c5, type: 3}
+    isLearned: 0
+  - id: eff8541a-a63c-4963-86f3-0af8077d5e23
+    category: Nose
+    partName: Nose_TriangleTop
+    sprite: {fileID: 5429489554803435128, guid: 567fba8ccce604da9bd9e9231608a353, type: 3}
+    isLearned: 0
+  - id: ae87c218-a85e-4ee9-9089-60752c92d758
+    category: Nose
+    partName: Nose_TriangleTop_Wide
+    sprite: {fileID: 5232463615141925093, guid: 9526ab17df58d49998d9c5d5a69b6b3b, type: 3}
+    isLearned: 0
+  - id: ba34b68a-542b-42de-9b8c-976f9353b0a6
+    category: Nose
+    partName: Nose_Round_Outlined
+    sprite: {fileID: 6251908440293056542, guid: 74c5b8239866c46bbbe6df9e0d0f3a0a, type: 3}
+    isLearned: 0
+  - id: 4c509485-6c56-486c-8d5a-9fa3974eb8c9
+    category: Nose
+    partName: Nose_Round_NotOutlined
+    sprite: {fileID: -3426642157756904602, guid: d776edc4bb22b4d38ac3646421f3b63a, type: 3}
+    isLearned: 0
+  - id: f8f963ad-64b5-47e9-a6b9-3c16247d4ad6
+    category: Nose
+    partName: Nose_Dot
+    sprite: {fileID: 7122811175645627114, guid: e9c3a35eda9414fdabfb17f0ba5f48c5, type: 3}
+    isLearned: 0
+  - id: df44b6f1-acca-4c0f-9592-2adaa088232d
+    category: Nose
+    partName: Nose_AcuteTriangle
+    sprite: {fileID: 5765317835938150995, guid: a6ef25a96677c4f0188dfb0d02ed716c, type: 3}
+    isLearned: 0
+  - id: 4aa8510a-a2c6-4c26-a2d7-0854c521a503
+    category: FaceShape
+    partName: Face_Flower_outlined
+    sprite: {fileID: 5547289392028159930, guid: b5151b496ea7a4698b0ae4afe4bc166f, type: 3}
+    isLearned: 0
+  - id: 21754965-ffc6-44e6-a8b6-2c55a208e181
+    category: FaceShape
+    partName: Face_Flower_noOutline
+    sprite: {fileID: -4679274331032502074, guid: 2a0080751e2b04e28a1c23d70f7e1f1a, type: 3}
+    isLearned: 0
+  - id: 0b788d69-3cb2-4eca-b909-ef47f6d9d42d
+    category: FaceShape
+    partName: Face_Heart_Illustration
+    sprite: {fileID: 3479172844191145391, guid: c71e44dfe4a234c1987600e63de6e6eb, type: 3}
+    isLearned: 0
+  - id: c79475fd-bb71-48f8-b10f-762d3d422e2c
+    category: FaceShape
+    partName: Face_Heart_Realistic
+    sprite: {fileID: -8844797196407093874, guid: 57d45b9bbbe7947919b59e98e8cdd988, type: 3}
+    isLearned: 0
+  - id: 486c01e4-6235-4b74-abe8-5fde95254fbe
+    category: Shoulder
+    partName: Shoulder_Slanted_LongNeck
+    sprite: {fileID: 6326212787756716627, guid: 0ee484fe1ec2b4e24a17dc8fa5f258ee, type: 3}
+    isLearned: 0
+  - id: c7ff9d8e-8196-42aa-bb48-62d293c66d23
+    category: Shoulder
+    partName: Shoulder_Flat_LongNeck
+    sprite: {fileID: -3259844953487864868, guid: 8917a8802eb66401cb1c1b0df461a8f8, type: 3}
+    isLearned: 0
+  - id: 13e0c492-18ea-4e06-9277-50ff9efa1ba8
+    category: Shoulder
+    partName: Shoulder_Slanted_Long
+    sprite: {fileID: 4852596330055109160, guid: 2c944ecea2b094903bc2409061dc68ed, type: 3}
+    isLearned: 0
+  - id: ea3d1e7e-9199-4f60-821a-e29fa9eec04b
+    category: Ear
+    partName: Ears_Up_EarShaped
+    sprite: {fileID: 1017660212211285471, guid: fdfc5c531be1d4a3bbbfedf458e3e806, type: 3}
+    isLearned: 0
+  - id: 2e600060-31fb-44ce-abf6-11b958037a83
+    category: Ear
+    partName: Ears_Down_EarShaped
+    sprite: {fileID: 295796202516757839, guid: ba628cc2517704047b572c5da7a56e48, type: 3}
+    isLearned: 0
+  - id: b007a190-9e68-4df1-bb02-438b31b55a48
+    category: FrontHair
+    partName: FHair_Curl_Small+Big
+    sprite: {fileID: -8551995348837205439, guid: 51cee5d5f59ca4394a68aa612a9a3ec5, type: 3}
+    isLearned: 0
+  - id: e893612b-780e-45e1-a2f8-d3bd21f9c2f8
+    category: FrontHair
+    partName: FHair_Curl_Big+Small
+    sprite: {fileID: 7390044089077070539, guid: 2e91f3d4b73a74b0aa5cdd72a7cfbc8c, type: 3}
+    isLearned: 0
+  - id: ed0e6c66-2013-413f-b2b2-dfde266d2987
+    category: FrontHair
+    partName: FHair_Curl_OneCurl
+    sprite: {fileID: 4070810088261156987, guid: b8c885b1663694f1c8ef3666b7dcf98d, type: 3}
+    isLearned: 0
+  - id: decd9f68-2cc6-4652-9992-34c58c777036
+    category: Background
+    partName: BG_WindowsBG_GrayScale
+    sprite: {fileID: -1996905728084187436, guid: 763df78214eec42098aad8afbe023e9d, type: 3}
+    isLearned: 0
+  - id: faec86f1-6a12-4619-be19-b4e3b350fbd1
+    category: Background
+    partName: BG_WindowsBG_Colored
+    sprite: {fileID: -3099983425013036226, guid: 6562807069bc34fcc9e540f630632670, type: 3}
+    isLearned: 0
+  - id: ec57fea6-5887-44cd-8909-a9cfe9620df3
+    category: Background
+    partName: BG_WindowsBG_Colored_DogIncluded
+    sprite: {fileID: -214483493220518541, guid: 81cf305e08e9c45cf9da3692f0f1e5b2, type: 3}
+    isLearned: 0
+  - id: 7dd9624e-71f3-4d94-90f0-76cb44e75099
+    category: Background
+    partName: BG_Dot_dense_whiteBG
+    sprite: {fileID: 3592755055366514611, guid: d21010f9e93134cdc92b19e28606dad8, type: 3}
+    isLearned: 0
+  - id: 2eff2e53-bb65-4ebb-9fdb-27d05ceae533
+    category: Background
+    partName: BG_Dot_dense_blackBG
+    sprite: {fileID: 6027664135814111311, guid: 0d918b9ef53be4257a4bd4eee2969613, type: 3}
+    isLearned: 0
+  - id: e6d218cc-9a84-4059-b5d7-b19498f85731
+    category: Background
+    partName: BG_Dot_loose_whiteBG
+    sprite: {fileID: -1850266685951265233, guid: b7dbb50af374e41439e6bddb3e01f044, type: 3}
+    isLearned: 0
+  - id: 9f6788e5-ccfd-460c-ac55-597da18db3b6
+    category: Background
+    partName: BG_Dot_loose_blackBG
+    sprite: {fileID: -3902049827794382086, guid: df38d69d2bc514f0089ef834f57168be, type: 3}
+    isLearned: 0
+  - id: 45f7ea7b-3d92-4523-9696-dfdf2df82526
+    category: Background
+    partName: BG_BigDot_dense_whiteBG
+    sprite: {fileID: -482945378521040652, guid: 5ebedcc398ac044fcb6b02270cfe4c76, type: 3}
+    isLearned: 0
+  - id: cd1ba7be-d02b-40f3-a664-ba3c15ffb6de
+    category: Background
+    partName: BG_BigDot_loose_whiteBG
+    sprite: {fileID: -4960246041396950005, guid: 9bcc5791bbd454325b9dc0433c442af4, type: 3}
+    isLearned: 0
+  - id: eb642b1b-47ab-4f44-9e7a-3f7157fd2d78
+    category: Background
+    partName: BG_BigDot_dense_blackBG
+    sprite: {fileID: -2264037116625778829, guid: 570a3fe7dd6954030add28fc0ed2a4e9, type: 3}
+    isLearned: 0
+  - id: 5bfa8424-0381-4f9e-a495-876beefc9aaa
+    category: Background
+    partName: BG_BigDot_loose_blackBG
+    sprite: {fileID: -6563225406964165605, guid: a78cebc54758140d6b1809668a24d60f, type: 3}
+    isLearned: 0
+  - id: ae2298d1-1112-408e-958f-37156a26150e
+    category: PhoneCase
+    partName: PhoneCase_Yellow_6dots
+    sprite: {fileID: -9019811649588049114, guid: 2172df7fcb3044486b15dbc48ab93f10, type: 3}
+    isLearned: 0
+  - id: 1f3130a0-dd20-4295-9d32-79d018882e86
+    category: PhoneCase
+    partName: PhoneCase_Yellow_10dots
+    sprite: {fileID: -3513254142316059629, guid: 92c862bd607bb48e3b32b06a56c98141, type: 3}
+    isLearned: 0
+  - id: 4152bb49-d18a-46b5-bcee-b2a8e05f4a65
+    category: Eye
+    partName: Eyes_BlackEye_Both
+    sprite: {fileID: 446101763741394511, guid: 229dbfaad58a44bde93dea7866fb9546, type: 3}
+    isLearned: 0
+  - id: 9d64e824-7bcf-4c67-bfbf-11f8dbfa29d5
+    category: Nose
+    partName: Nose_Empty
+    sprite: {fileID: -7920392477800683257, guid: 32ba8999ffb7d42ea8cc280e93a28c85, type: 3}
+    isLearned: 0
   allGroups:
   - id: a61af27f-5754-458f-9264-f1afb9836d74
     groupName: Eye_Group1
@@ -4374,6 +4604,114 @@ MonoBehaviour:
           partName: Eyes_Dotted_Close
           sprite: {fileID: 3698876909380047432, guid: dbecf2c0b2dea41fd93edabb8f67b734, type: 3}
           isLearned: 1
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: a6384840-dd93-4a76-bcc9-b1f38640354a
+    groupName: Eye_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: 511878bd-6804-4e90-bc74-800e9979d1d6
+          category: Eye
+          partName: Eyes_Cross
+          sprite: {fileID: 4373222900869321235, guid: b278884cc28054887b4d34d180bc2f2c, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 00611a08-b8e2-43a3-8725-81fa8657f477
+          category: Eye
+          partName: Eyes_Cross_Big
+          sprite: {fileID: -214064085720313225, guid: 7f35a9b376bb34940aaf0b98736d0f10, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: c99b4cd7-396c-4251-9839-a5837c9756dc
+          category: Eye
+          partName: Eyes_Cross_eyedrop_white
+          sprite: {fileID: 8487800611720092463, guid: 9d1f04e74b35c479baaadacf09868c20, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 917933ba-372a-43f0-b70c-89d5a7f85ec5
+          category: Eye
+          partName: Eyes_Cross_eyedrop_black
+          sprite: {fileID: -4025863408974056559, guid: a7315ab38f931462c9e358f8c610b13a, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: be2bbed7-4d7b-40b4-911e-43c74c583ac5
+    groupName: Eye_Group3
+    sets:
+    - leftPart:
+        features:
+        - id: af84ec60-bc40-41e8-85a6-e0930de5ef24
+          category: Eye
+          partName: Eyes_Dotted_Close
+          sprite: {fileID: 3698876909380047432, guid: dbecf2c0b2dea41fd93edabb8f67b734, type: 3}
+          isLearned: 1
+      rightPart:
+        features:
+        - id: a463b14a-b825-4b50-8f94-bbc74d470bda
+          category: Eye
+          partName: Eyes_Dotted_Eyelid
+          sprite: {fileID: -2948454636556622860, guid: b801f9033207247f6a39ecf682bf4e54, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: af84ec60-bc40-41e8-85a6-e0930de5ef24
+          category: Eye
+          partName: Eyes_Dotted_Close
+          sprite: {fileID: 3698876909380047432, guid: dbecf2c0b2dea41fd93edabb8f67b734, type: 3}
+          isLearned: 1
+      rightPart:
+        features:
+        - id: 7e82cd15-3acb-4e52-a6fb-7acacca51586
+          category: Eye
+          partName: Eyes_Dotted_Far
+          sprite: {fileID: -9137920370052682348, guid: decb3d26221894b7c9a5ce730c41885e, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: f0f19fd5-7998-45c9-9bb4-558635171f23
+    groupName: Eye_Group4
+    sets:
+    - leftPart:
+        features:
+        - id: 4152bb49-d18a-46b5-bcee-b2a8e05f4a65
+          category: Eye
+          partName: Eyes_BlackEye_Both
+          sprite: {fileID: 446101763741394511, guid: 229dbfaad58a44bde93dea7866fb9546, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: e0f1b857-853d-4679-a150-1e2b94072bc4
+          category: Eye
+          partName: Eyes_BlackEye_Single_CAPPED
+          sprite: {fileID: -112447072331494005, guid: 7af0eabd7911a43a89f8b3e9b043ea7e, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: 6e6b8915-dd47-48e3-9019-cf7f84f84728
+          category: Eye
+          partName: Eyes_BlackEye_Single
+          sprite: {fileID: -6523355460061452136, guid: 206de9b6a9e17435e8632985f51c85ce, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: e0f1b857-853d-4679-a150-1e2b94072bc4
+          category: Eye
+          partName: Eyes_BlackEye_Single_CAPPED
+          sprite: {fileID: -112447072331494005, guid: 7af0eabd7911a43a89f8b3e9b043ea7e, type: 3}
+          isLearned: 0
       isLearned: 0
     isLearned: 0
     selectionChance: 1
@@ -4414,6 +4752,63 @@ MonoBehaviour:
     isLearned: 0
     selectionChance: 1
     flipSides: 0
+  - id: cd548ba9-6095-4fa8-bfb9-92eecdf13f62
+    groupName: Mouth_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: 39a45263-5a51-44f0-9a14-8ef8710dbd58
+          category: Mouth
+          partName: Mouth_Kiss_ToRight
+          sprite: {fileID: -5571732540192804806, guid: 0220c22a820b1486990d8b67aa3982fa, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 84c513f2-ade0-4ba1-aa27-6b4436012749
+          category: Mouth
+          partName: Mouth_Kiss_ToLeft
+          sprite: {fileID: 7856969686412800489, guid: 8467703a5871a4dfd944d6bbe32240e1, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: f7a6f197-f6b9-46fb-8656-dfc3befb7e14
+    groupName: Mouth_Group3
+    sets:
+    - leftPart:
+        features:
+        - id: c590312d-9323-4af1-abed-d0c86f1f9b9b
+          category: Mouth
+          partName: Mouth_Smile_Small
+          sprite: {fileID: -6521973473395818844, guid: e6a4857b14efc4440a3a86c4579cc3a5, type: 3}
+          isLearned: 1
+      rightPart:
+        features:
+        - id: eef13c70-c897-40aa-8ed4-f05d46940833
+          category: Mouth
+          partName: Mouth_Smile_Open
+          sprite: {fileID: -1183503993918261553, guid: 262b078729ab441a4874f55b923968b1, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: c590312d-9323-4af1-abed-d0c86f1f9b9b
+          category: Mouth
+          partName: Mouth_Smile_Small
+          sprite: {fileID: -6521973473395818844, guid: e6a4857b14efc4440a3a86c4579cc3a5, type: 3}
+          isLearned: 1
+      rightPart:
+        features:
+        - id: efec063f-6582-4487-8527-099e4f9f16d9
+          category: Mouth
+          partName: Mouth_Smile_Wide
+          sprite: {fileID: 2386306301835050700, guid: cc80001327a3b4710ac88f486f7b62d7, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
   - id: 1ccb8785-543c-4aa0-9455-989ea6a768d3
     groupName: Nose_Group1
     sets:
@@ -4430,6 +4825,124 @@ MonoBehaviour:
           category: Nose
           partName: Nose_ObtuseTriangle
           sprite: {fileID: 4199636448092766185, guid: 04a6c97a35eee44f891a47b87bae7802, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 1dd3cbff-24e3-4202-8fb8-0935d81e88ad
+    groupName: Nose_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: a28bac7a-37c6-4e0d-820c-a07ad56fdcc4
+          category: Nose
+          partName: Nose_TriangleBot
+          sprite: {fileID: 3082956742508864695, guid: 0065c5731aa4d4cf2b178358b2f5d863, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: d9dcc19e-d04e-4ea3-95e9-80c5ff9864e4
+          category: Nose
+          partName: Nose_Eyedrop
+          sprite: {fileID: 7166831213633884016, guid: e3edf0099dff94233948f91af56b46c5, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: af84ec60-bc40-41e8-85a6-e0930de5ef24
+          category: Eye
+          partName: Eyes_Dotted_Close
+          sprite: {fileID: 3698876909380047432, guid: dbecf2c0b2dea41fd93edabb8f67b734, type: 3}
+          isLearned: 1
+        - id: eff8541a-a63c-4963-86f3-0af8077d5e23
+          category: Nose
+          partName: Nose_TriangleTop
+          sprite: {fileID: 5429489554803435128, guid: 567fba8ccce604da9bd9e9231608a353, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 7e82cd15-3acb-4e52-a6fb-7acacca51586
+          category: Eye
+          partName: Eyes_Dotted_Far
+          sprite: {fileID: -9137920370052682348, guid: decb3d26221894b7c9a5ce730c41885e, type: 3}
+          isLearned: 0
+        - id: ae87c218-a85e-4ee9-9089-60752c92d758
+          category: Nose
+          partName: Nose_TriangleTop_Wide
+          sprite: {fileID: 5232463615141925093, guid: 9526ab17df58d49998d9c5d5a69b6b3b, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: af84ec60-bc40-41e8-85a6-e0930de5ef24
+          category: Eye
+          partName: Eyes_Dotted_Close
+          sprite: {fileID: 3698876909380047432, guid: dbecf2c0b2dea41fd93edabb8f67b734, type: 3}
+          isLearned: 1
+      rightPart:
+        features:
+        - id: 7e82cd15-3acb-4e52-a6fb-7acacca51586
+          category: Eye
+          partName: Eyes_Dotted_Far
+          sprite: {fileID: -9137920370052682348, guid: decb3d26221894b7c9a5ce730c41885e, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 16c702e0-50ce-41b7-9b95-03c4fdb0788e
+    groupName: Nose_Group3
+    sets:
+    - leftPart:
+        features:
+        - id: eff8541a-a63c-4963-86f3-0af8077d5e23
+          category: Nose
+          partName: Nose_TriangleTop
+          sprite: {fileID: 5429489554803435128, guid: 567fba8ccce604da9bd9e9231608a353, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: df44b6f1-acca-4c0f-9592-2adaa088232d
+          category: Nose
+          partName: Nose_AcuteTriangle
+          sprite: {fileID: 5765317835938150995, guid: a6ef25a96677c4f0188dfb0d02ed716c, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: cca2673c-0550-467e-8788-4074afe5c01f
+    groupName: Nose_Group4
+    sets:
+    - leftPart:
+        features:
+        - id: ba34b68a-542b-42de-9b8c-976f9353b0a6
+          category: Nose
+          partName: Nose_Round_Outlined
+          sprite: {fileID: 6251908440293056542, guid: 74c5b8239866c46bbbe6df9e0d0f3a0a, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 4c509485-6c56-486c-8d5a-9fa3974eb8c9
+          category: Nose
+          partName: Nose_Round_NotOutlined
+          sprite: {fileID: -3426642157756904602, guid: d776edc4bb22b4d38ac3646421f3b63a, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: 9d64e824-7bcf-4c67-bfbf-11f8dbfa29d5
+          category: Nose
+          partName: Nose_Empty
+          sprite: {fileID: -7920392477800683257, guid: 32ba8999ffb7d42ea8cc280e93a28c85, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: f8f963ad-64b5-47e9-a6b9-3c16247d4ad6
+          category: Nose
+          partName: Nose_Dot
+          sprite: {fileID: 7122811175645627114, guid: e9c3a35eda9414fdabfb17f0ba5f48c5, type: 3}
           isLearned: 0
       isLearned: 0
     isLearned: 0
@@ -4471,6 +4984,48 @@ MonoBehaviour:
     isLearned: 0
     selectionChance: 1
     flipSides: 0
+  - id: 05213439-4d45-4a1d-ba49-362c30d50930
+    groupName: FaceShape_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: 21754965-ffc6-44e6-a8b6-2c55a208e181
+          category: FaceShape
+          partName: Face_Flower_noOutline
+          sprite: {fileID: -4679274331032502074, guid: 2a0080751e2b04e28a1c23d70f7e1f1a, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 4aa8510a-a2c6-4c26-a2d7-0854c521a503
+          category: FaceShape
+          partName: Face_Flower_outlined
+          sprite: {fileID: 5547289392028159930, guid: b5151b496ea7a4698b0ae4afe4bc166f, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: a7f13e5c-38f9-43ee-883d-5f08102593d8
+    groupName: FaceShape_Group3
+    sets:
+    - leftPart:
+        features:
+        - id: 0b788d69-3cb2-4eca-b909-ef47f6d9d42d
+          category: FaceShape
+          partName: Face_Heart_Illustration
+          sprite: {fileID: 3479172844191145391, guid: c71e44dfe4a234c1987600e63de6e6eb, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: c79475fd-bb71-48f8-b10f-762d3d422e2c
+          category: FaceShape
+          partName: Face_Heart_Realistic
+          sprite: {fileID: -8844797196407093874, guid: 57d45b9bbbe7947919b59e98e8cdd988, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
   - id: 56dd4909-de06-4fac-b691-63fd50466256
     groupName: Shoulder_Group1
     sets:
@@ -4481,6 +5036,78 @@ MonoBehaviour:
           partName: Shoulder_Slanted_noNeck
           sprite: {fileID: 9201635339230928900, guid: 6c18e458492694d8abb7679175b8e0f6, type: 3}
           isLearned: 1
+      rightPart:
+        features:
+        - id: fbb39b36-fec8-47ef-aca2-e6ce859d33a0
+          category: Shoulder
+          partName: Shoulder_Flat_noNeck
+          sprite: {fileID: -9177774427156722606, guid: f84cf173e65254377826991d9346ee66, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 815ed944-befe-4814-8d4e-e8c09b9fecf0
+    groupName: Shoulder_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: 96b3c9a8-bd2a-49eb-8052-5f8d6a2bfc9d
+          category: Shoulder
+          partName: Shoulder_Slanted_noNeck
+          sprite: {fileID: 9201635339230928900, guid: 6c18e458492694d8abb7679175b8e0f6, type: 3}
+          isLearned: 1
+      rightPart:
+        features:
+        - id: 486c01e4-6235-4b74-abe8-5fde95254fbe
+          category: Shoulder
+          partName: Shoulder_Slanted_LongNeck
+          sprite: {fileID: 6326212787756716627, guid: 0ee484fe1ec2b4e24a17dc8fa5f258ee, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: c7ff9d8e-8196-42aa-bb48-62d293c66d23
+          category: Shoulder
+          partName: Shoulder_Flat_LongNeck
+          sprite: {fileID: -3259844953487864868, guid: 8917a8802eb66401cb1c1b0df461a8f8, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 486c01e4-6235-4b74-abe8-5fde95254fbe
+          category: Shoulder
+          partName: Shoulder_Slanted_LongNeck
+          sprite: {fileID: 6326212787756716627, guid: 0ee484fe1ec2b4e24a17dc8fa5f258ee, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 41bb1e24-d3ff-45a3-a58d-dddc4ad7fc70
+    groupName: Shoulder_Group3
+    sets:
+    - leftPart:
+        features:
+        - id: 13e0c492-18ea-4e06-9277-50ff9efa1ba8
+          category: Shoulder
+          partName: Shoulder_Slanted_Long
+          sprite: {fileID: 4852596330055109160, guid: 2c944ecea2b094903bc2409061dc68ed, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 486c01e4-6235-4b74-abe8-5fde95254fbe
+          category: Shoulder
+          partName: Shoulder_Slanted_LongNeck
+          sprite: {fileID: 6326212787756716627, guid: 0ee484fe1ec2b4e24a17dc8fa5f258ee, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: 486c01e4-6235-4b74-abe8-5fde95254fbe
+          category: Shoulder
+          partName: Shoulder_Slanted_LongNeck
+          sprite: {fileID: 6326212787756716627, guid: 0ee484fe1ec2b4e24a17dc8fa5f258ee, type: 3}
+          isLearned: 0
       rightPart:
         features:
         - id: fbb39b36-fec8-47ef-aca2-e6ce859d33a0
@@ -4510,6 +5137,57 @@ MonoBehaviour:
           sprite: {fileID: 5267767170793138143, guid: 6db1a5dffe47f4c95bfbc13a6625f09a, type: 3}
           isLearned: 0
       isLearned: 0
+    - leftPart:
+        features:
+        - id: 69366ef7-32b9-4382-9bdd-bad80709b9b6
+          category: FrontHair
+          partName: FHair_Spiky_Front_5Spikes
+          sprite: {fileID: -8196944340878748272, guid: d01c2fb256f1c452bb2444a6e44033d2, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 32ba274f-b1fa-469a-9e88-7e5ee030715d
+          category: FrontHair
+          partName: FHair_Spiky_Front_4Spikes
+          sprite: {fileID: -6128269367414971308, guid: 6f6e25781a65c4b609c366e83f375e26, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 6d948487-d936-4678-8e6f-1e0f1c965f66
+    groupName: FrontHair_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: b007a190-9e68-4df1-bb02-438b31b55a48
+          category: FrontHair
+          partName: FHair_Curl_Small+Big
+          sprite: {fileID: -8551995348837205439, guid: 51cee5d5f59ca4394a68aa612a9a3ec5, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: ed0e6c66-2013-413f-b2b2-dfde266d2987
+          category: FrontHair
+          partName: FHair_Curl_OneCurl
+          sprite: {fileID: 4070810088261156987, guid: b8c885b1663694f1c8ef3666b7dcf98d, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: b007a190-9e68-4df1-bb02-438b31b55a48
+          category: FrontHair
+          partName: FHair_Curl_Small+Big
+          sprite: {fileID: -8551995348837205439, guid: 51cee5d5f59ca4394a68aa612a9a3ec5, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: e893612b-780e-45e1-a2f8-d3bd21f9c2f8
+          category: FrontHair
+          partName: FHair_Curl_Big+Small
+          sprite: {fileID: 7390044089077070539, guid: 2e91f3d4b73a74b0aa5cdd72a7cfbc8c, type: 3}
+          isLearned: 0
+      isLearned: 0
     isLearned: 0
     selectionChance: 1
     flipSides: 0
@@ -4525,6 +5203,21 @@ MonoBehaviour:
           isLearned: 1
       rightPart:
         features:
+        - id: 69366ef7-32b9-4382-9bdd-bad80709b9b6
+          category: FrontHair
+          partName: FHair_Spiky_Front_5Spikes
+          sprite: {fileID: -8196944340878748272, guid: d01c2fb256f1c452bb2444a6e44033d2, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: bb250f02-2c78-495c-8441-65fa8b6aead1
+          category: BackHair
+          partName: BHair_Spiky_Back_5Spikes
+          sprite: {fileID: 5267767170793138143, guid: 6db1a5dffe47f4c95bfbc13a6625f09a, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
         - id: 9e508090-9cbc-40a4-bc60-d7624a2f3a11
           category: BackHair
           partName: BHair_Spiky_Back_4Spikes
@@ -4536,6 +5229,57 @@ MonoBehaviour:
     flipSides: 0
   - id: d84800bd-76ae-4614-ba84-d7b7f921c089
     groupName: Ear_Group1
+    sets:
+    - leftPart:
+        features:
+        - id: 2c1b49e6-2daa-441f-b85c-3614170b9c38
+          category: Ear
+          partName: Ears_Down
+          sprite: {fileID: -6983689567400139908, guid: a26f056a3ef3046f28356a5d26defc3e, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 2e600060-31fb-44ce-abf6-11b958037a83
+          category: Ear
+          partName: Ears_Down_EarShaped
+          sprite: {fileID: 295796202516757839, guid: ba628cc2517704047b572c5da7a56e48, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: 2c1b49e6-2daa-441f-b85c-3614170b9c38
+          category: Ear
+          partName: Ears_Down
+          sprite: {fileID: -6983689567400139908, guid: a26f056a3ef3046f28356a5d26defc3e, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: c5eed9b2-1c5e-443e-834b-a9b78304c2f9
+          category: Ear
+          partName: Ears_Up
+          sprite: {fileID: 5930514889997465791, guid: 770de308faa954a1b9b3f3cdf0633d2e, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: ea3d1e7e-9199-4f60-821a-e29fa9eec04b
+          category: Ear
+          partName: Ears_Up_EarShaped
+          sprite: {fileID: 1017660212211285471, guid: fdfc5c531be1d4a3bbbfedf458e3e806, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: c5eed9b2-1c5e-443e-834b-a9b78304c2f9
+          category: Ear
+          partName: Ears_Up
+          sprite: {fileID: 5930514889997465791, guid: 770de308faa954a1b9b3f3cdf0633d2e, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 193eee78-a588-47c3-ad0a-eba0266dc936
+    groupName: Ear_Group2
     sets:
     - leftPart:
         features:
@@ -4589,7 +5333,115 @@ MonoBehaviour:
           isLearned: 1
       isLearned: 0
     isLearned: 0
-    selectionChance: 0.669
+    selectionChance: 0.5
+    flipSides: 0
+  - id: edc4e0de-dd2c-4f83-966e-24d4d544e375
+    groupName: Background_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: decd9f68-2cc6-4652-9992-34c58c777036
+          category: Background
+          partName: BG_WindowsBG_GrayScale
+          sprite: {fileID: -1996905728084187436, guid: 763df78214eec42098aad8afbe023e9d, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: faec86f1-6a12-4619-be19-b4e3b350fbd1
+          category: Background
+          partName: BG_WindowsBG_Colored
+          sprite: {fileID: -3099983425013036226, guid: 6562807069bc34fcc9e540f630632670, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: ec57fea6-5887-44cd-8909-a9cfe9620df3
+          category: Background
+          partName: BG_WindowsBG_Colored_DogIncluded
+          sprite: {fileID: -214483493220518541, guid: 81cf305e08e9c45cf9da3692f0f1e5b2, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: faec86f1-6a12-4619-be19-b4e3b350fbd1
+          category: Background
+          partName: BG_WindowsBG_Colored
+          sprite: {fileID: -3099983425013036226, guid: 6562807069bc34fcc9e540f630632670, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: c3db92c5-b1c7-4675-8211-7492bbc47868
+    groupName: Background_Group3
+    sets:
+    - leftPart:
+        features:
+        - id: 7dd9624e-71f3-4d94-90f0-76cb44e75099
+          category: Background
+          partName: BG_Dot_dense_whiteBG
+          sprite: {fileID: 3592755055366514611, guid: d21010f9e93134cdc92b19e28606dad8, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 2eff2e53-bb65-4ebb-9fdb-27d05ceae533
+          category: Background
+          partName: BG_Dot_dense_blackBG
+          sprite: {fileID: 6027664135814111311, guid: 0d918b9ef53be4257a4bd4eee2969613, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: 7dd9624e-71f3-4d94-90f0-76cb44e75099
+          category: Background
+          partName: BG_Dot_dense_whiteBG
+          sprite: {fileID: 3592755055366514611, guid: d21010f9e93134cdc92b19e28606dad8, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: e6d218cc-9a84-4059-b5d7-b19498f85731
+          category: Background
+          partName: BG_Dot_loose_whiteBG
+          sprite: {fileID: -1850266685951265233, guid: b7dbb50af374e41439e6bddb3e01f044, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
+    flipSides: 0
+  - id: 709df5ce-3c26-4096-b657-37d3be38e191
+    groupName: Background_Group4
+    sets:
+    - leftPart:
+        features:
+        - id: cd1ba7be-d02b-40f3-a664-ba3c15ffb6de
+          category: Background
+          partName: BG_BigDot_loose_whiteBG
+          sprite: {fileID: -4960246041396950005, guid: 9bcc5791bbd454325b9dc0433c442af4, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: e6d218cc-9a84-4059-b5d7-b19498f85731
+          category: Background
+          partName: BG_Dot_loose_whiteBG
+          sprite: {fileID: -1850266685951265233, guid: b7dbb50af374e41439e6bddb3e01f044, type: 3}
+          isLearned: 0
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: 9f6788e5-ccfd-460c-ac55-597da18db3b6
+          category: Background
+          partName: BG_Dot_loose_blackBG
+          sprite: {fileID: -3902049827794382086, guid: df38d69d2bc514f0089ef834f57168be, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 2eff2e53-bb65-4ebb-9fdb-27d05ceae533
+          category: Background
+          partName: BG_Dot_dense_blackBG
+          sprite: {fileID: 6027664135814111311, guid: 0d918b9ef53be4257a4bd4eee2969613, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
     flipSides: 0
   - id: 59f47224-9a5f-4c25-b8af-207dface589b
     groupName: PhoneCase_Group1
@@ -4625,7 +5477,43 @@ MonoBehaviour:
           isLearned: 0
       isLearned: 0
     isLearned: 0
-    selectionChance: 0.662
+    selectionChance: 0.5
+    flipSides: 0
+  - id: d2220c22-868b-430d-a354-fa61059280cb
+    groupName: PhoneCase_Group2
+    sets:
+    - leftPart:
+        features:
+        - id: ae2298d1-1112-408e-958f-37156a26150e
+          category: PhoneCase
+          partName: PhoneCase_Yellow_6dots
+          sprite: {fileID: -9019811649588049114, guid: 2172df7fcb3044486b15dbc48ab93f10, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 66e89f7b-9f64-449c-a441-841a640625b8
+          category: PhoneCase
+          partName: PhoneCase_Grey_6dots
+          sprite: {fileID: -4889771059206860776, guid: 825198fbefa3e4ff581e305822dc83e9, type: 3}
+          isLearned: 1
+      isLearned: 0
+    - leftPart:
+        features:
+        - id: ae2298d1-1112-408e-958f-37156a26150e
+          category: PhoneCase
+          partName: PhoneCase_Yellow_6dots
+          sprite: {fileID: -9019811649588049114, guid: 2172df7fcb3044486b15dbc48ab93f10, type: 3}
+          isLearned: 0
+      rightPart:
+        features:
+        - id: 1f3130a0-dd20-4295-9d32-79d018882e86
+          category: PhoneCase
+          partName: PhoneCase_Yellow_10dots
+          sprite: {fileID: -3513254142316059629, guid: 92c862bd607bb48e3b32b06a56c98141, type: 3}
+          isLearned: 0
+      isLearned: 0
+    isLearned: 0
+    selectionChance: 1
     flipSides: 0
 --- !u!4 &955429546
 Transform:
@@ -8036,8 +8924,8 @@ RectTransform:
   - {fileID: 470570167}
   - {fileID: 1413007514}
   - {fileID: 429196346}
-  - {fileID: 1215582489}
   - {fileID: 386707252}
+  - {fileID: 1215582489}
   - {fileID: 589989723}
   - {fileID: 774299867}
   - {fileID: 1799552839}

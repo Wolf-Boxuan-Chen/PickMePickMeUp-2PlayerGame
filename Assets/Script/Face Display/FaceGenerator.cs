@@ -60,14 +60,14 @@ public class FaceGenerator : MonoBehaviour
         currentActiveSet = null;
         currentActiveGroup = null;
         
-        if (rng < 0.01f)
+        if (rng < 0.3f)
         {
             // 30% chance: Generate identical faces
             generationMethod = "Identical Learned Faces";
             Debug.Log($"Generating {generationMethod}");
             GenerateIdenticalLearnedFaces();
         }
-        else if (rng < 0.02f)
+        else if (rng < 0.2f)
         {
             // 30% chance: Generate faces with differences
             generationMethod = "Different Learned Faces";

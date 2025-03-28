@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FacePart=Face Shape, Number=Face_Oval_Big_NoOutline_0: -5990731253454683941
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

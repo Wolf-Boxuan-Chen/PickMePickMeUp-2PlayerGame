@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 57eae71b2a93c417b8d02c2619be3efd
+guid: a78cebc54758140d6b1809668a24d60f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1576076766788340200
-    second: FacePart=Eyes, Number=Eyes_Cross_eyedrop_blue_0
+      213: -6563225406964165605
+    second: FacePart=BG, Number=BG_BigDot_loose_blackBG_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FacePart=Eyes, Number=Eyes_Cross_eyedrop_blue_0
+      name: FacePart=BG, Number=BG_BigDot_loose_blackBG_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 816b5d0f786a02ae0800000000000000
-      internalID: -1576076766788340200
+      spriteID: b14151d044dbae4a0800000000000000
+      internalID: -6563225406964165605
       vertices: []
       indices: 
       edges: []

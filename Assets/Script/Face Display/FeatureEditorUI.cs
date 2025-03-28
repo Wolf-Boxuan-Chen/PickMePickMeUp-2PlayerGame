@@ -478,14 +478,48 @@ public class FeatureEditorUI : EditorWindow
     }
 
     // Add this method to enable group reordering
+    // In FeatureEditorUI.cs, update the SwapGroups method
     private void SwapGroups(List<FeatureGroup> groups, int index1, int index2)
     {
         if (index1 < 0 || index1 >= groups.Count || index2 < 0 || index2 >= groups.Count)
             return;
+                
+        // Get the actual allGroups list from FaceDatabase
+        var groupsField = typeof(FaceDatabase).GetField("allGroups", 
+            System.Reflection.BindingFlags.NonPublic | 
+            System.Reflection.BindingFlags.Instance);
+        
+        if (groupsField != null)
+        {
+            var allGroups = groupsField.GetValue(faceDatabase) as List<FeatureGroup>;
             
-        FeatureGroup temp = groups[index1];
-        groups[index1] = groups[index2];
-        groups[index2] = temp;
+            if (allGroups != null)
+            {
+                // Find the actual indices in the allGroups list
+                int actualIndex1 = allGroups.IndexOf(groups[index1]);
+                int actualIndex2 = allGroups.IndexOf(groups[index2]);
+                
+                if (actualIndex1 >= 0 && actualIndex2 >= 0)
+                {
+                    // Swap in both lists
+                    FeatureGroup temp = groups[index1];
+                    groups[index1] = groups[index2];
+                    groups[index2] = temp;
+                    
+                    temp = allGroups[actualIndex1];
+                    allGroups[actualIndex1] = allGroups[actualIndex2];
+                    allGroups[actualIndex2] = temp;
+                    
+                    // Mark database as dirty
+                    EditorUtility.SetDirty(faceDatabase);
+                    Debug.Log($"Swapped groups at indices {index1} and {index2} (allGroups indices {actualIndex1} and {actualIndex2})");
+                }
+                else
+                {
+                    Debug.LogWarning($"Could not find corresponding indices in allGroups list");
+                }
+            }
+        }
     }
 
     // Add this method to implement group deletion

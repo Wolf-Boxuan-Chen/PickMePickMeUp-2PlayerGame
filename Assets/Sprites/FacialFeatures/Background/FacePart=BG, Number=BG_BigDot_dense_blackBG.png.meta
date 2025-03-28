@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d7ce012d5de6f47bda783f6f02262dd8
+guid: 570a3fe7dd6954030add28fc0ed2a4e9
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5511733398423452163
-    second: FacePart=BG, Number=BigDot_dense_blackBG_0
+      213: -2264037116625778829
+    second: FacePart=BG, Number=BG_BigDot_dense_blackBG_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FacePart=BG, Number=BigDot_dense_blackBG_0
+      name: FacePart=BG, Number=BG_BigDot_dense_blackBG_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 30abfadc25c9d7c40800000000000000
-      internalID: 5511733398423452163
+      spriteID: 3778831ec368490e0800000000000000
+      internalID: -2264037116625778829
       vertices: []
       indices: 
       edges: []

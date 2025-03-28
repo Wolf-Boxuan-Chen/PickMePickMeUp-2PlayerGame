@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: cc5dd04aa78fc45bfabb9130c626225c
+guid: 32ba8999ffb7d42ea8cc280e93a28c85
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 9119730416836766273
-    second: FacePart=BG, Number=BigDot_loose_blackBG_0
+      213: -7920392477800683257
+    second: FacePart=Nose, Number=Nose_Empty_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,7 +113,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: FacePart=BG, Number=BigDot_loose_blackBG_0
+      name: FacePart=Nose, Number=Nose_Empty_0
       rect:
         serializedVersion: 2
         x: 0
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 14a61e6ee7acf8e70800000000000000
-      internalID: 9119730416836766273
+      spriteID: 709a307610d151290800000000000000
+      internalID: -7920392477800683257
       vertices: []
       indices: 
       edges: []

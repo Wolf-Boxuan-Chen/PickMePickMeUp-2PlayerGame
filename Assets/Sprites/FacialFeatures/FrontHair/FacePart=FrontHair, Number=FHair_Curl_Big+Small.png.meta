@@ -147,7 +147,8 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      FacePart=FrontHair, Number=FHair_Curl_Big+Small_0: 7390044089077070539
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
