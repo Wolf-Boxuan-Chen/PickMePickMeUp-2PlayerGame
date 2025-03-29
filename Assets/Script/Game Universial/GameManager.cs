@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 using UnityEditor;
 
 #if UNITY_EDITOR
-
-
 public class GameManager : MonoBehaviour
 {
     [Header("Game Components")]
@@ -437,7 +435,7 @@ public class GameManager : MonoBehaviour
 
     private void HandleActiveCallGreenButton() {
         Debug.Log("HandleActiveCallGreenButton called");
-        ShowReminder("Finish the call with your \"Friend\"!", 3f);
+        ShowReminder("If it's a FRIEND..Finish the call then!", 3f);
     }
 
     private void ShowReminder(string message, float duration) {

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class InputManager : MonoBehaviour
 {
@@ -28,9 +29,9 @@ public class InputManager : MonoBehaviour
     [SerializeField] private Sprite pickUpNormalSprite;
     [SerializeField] private Sprite pickUpPressedSprite;
 	
-	[Header("Input Settings")]
+    [Header("Input Settings")]
     [SerializeField] private float initialInputDelay = 0.5f; // Delay before accepting input
-    
+
     // Track current game phase
     private bool inCallPhase = false;
     
@@ -38,10 +39,10 @@ public class InputManager : MonoBehaviour
     private bool hangUpPressed = false;
     private bool pickUpPressed = false;
 
-	// Flag to enable/disable input processing
+    // Flag to enable/disable input processing
     private bool inputEnabled = false;
     
-	private void Start()
+    private void Start()
     {
         // Initially disable input
         inputEnabled = false;
@@ -50,7 +51,7 @@ public class InputManager : MonoBehaviour
         StartCoroutine(EnableInputAfterDelay());
     }
 	
-	private System.Collections.IEnumerator EnableInputAfterDelay()
+    private System.Collections.IEnumerator EnableInputAfterDelay()
     {
         Debug.Log("Input disabled for initial delay...");
         yield return new WaitForSeconds(initialInputDelay);
@@ -62,7 +63,7 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-		// Skip input processing if not yet enabled
+        // Skip input processing if not yet enabled
         if (!inputEnabled) return;
 
         // Process hang up button in call phase
@@ -79,10 +80,31 @@ public class InputManager : MonoBehaviour
                 UpdateButtonSprites();
                 OnHangUpTriggered?.Invoke();
             }
+            
+            // Check for green button press during active call
+            if (Input.GetKeyDown(pickUpKey)) 
+            {
+                Debug.Log("Green button pressed during active call");
+                OnActiveCallGreenButtonPressed?.Invoke();
+            }
         }
         // Process pick up button in between calls
         else
         {
+            // Check for red button press during incoming call
+            if (Input.GetKeyDown(hangUpKey))
+            {
+                Debug.Log("Red button pressed during incoming call");
+                hangUpPressed = true;
+                UpdateButtonSprites();
+                //OnIncomingCallRedButtonPressed?.Invoke();
+            }
+            else if (Input.GetKeyUp(hangUpKey) && hangUpPressed)
+            {
+                hangUpPressed = false;
+                UpdateButtonSprites();
+            }
+
             if (Input.GetKeyDown(pickUpKey))
             {
                 pickUpPressed = true;
@@ -95,18 +117,6 @@ public class InputManager : MonoBehaviour
                 OnPickUpTriggered?.Invoke();
             }
         }
-        
-        // In the method where you check for red button during incoming call
-		if (!inCallPhase && Input.GetKeyDown(hangUpKey)) {
-    		Debug.Log("Red button pressed during incoming call");
-    		OnIncomingCallRedButtonPressed?.Invoke();
-		}
-
-		// In the method where you check for green button during active call
-		if (inCallPhase && Input.GetKeyDown(pickUpKey)) {
-    		Debug.Log("Green button pressed during active call");
-    		OnActiveCallGreenButtonPressed?.Invoke();
-		}
     }
     
     // Update the button visuals based on current state
@@ -136,11 +146,10 @@ public class InputManager : MonoBehaviour
         UpdateButtonSprites();
     }
 	
-	// Public method to enable/disable input processing
+    // Public method to enable/disable input processing
     public void EnableInput(bool enable)
     {
         inputEnabled = enable;
         Debug.Log($"Input processing {(enable ? "enabled" : "disabled")}");
     }
-    
 }

@@ -46,7 +46,7 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] private DualTextElements resultInText;
     
     [Header("Navigation")]
-    [SerializeField] private string startSceneName = "StartScene";
+    [SerializeField] private string startSceneName = "StartInstructionScene";
     [SerializeField] private string gameSceneName = "GameScene";
     
     [Header("Settings")]

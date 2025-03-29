@@ -746,7 +746,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: dbf0dc2847652480aa1b720d73e0cebe, type: 3}
   m_Resource: {fileID: 8300000, guid: dbf0dc2847652480aa1b720d73e0cebe, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 0.377
+  m_Volume: 0.132
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -9109,7 +9109,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftMonitorImage: {fileID: 427850986}
-  rightMonitorImage: {fileID: 0}
+  rightMonitorImage: {fileID: 1134349878}
   colorChangeSpeed: 4
   saturationMultiplier: 1
 --- !u!4 &1628103403
@@ -9140,7 +9140,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   leftPhonePanel: {fileID: 45814230}
-  rightPhonePanel: {fileID: 45814230}
+  rightPhonePanel: {fileID: 780277908}
   leftFacePanel: {fileID: 919649326}
   rightFacePanel: {fileID: 1600400660}
   vibrationIntensity: 2
