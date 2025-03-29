@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ScrollingBackground : MonoBehaviour
 {
     [Header("Textures")]
+    [SerializeField] private Sprite backgroundSprite; // New dedicated background sprite
     [SerializeField] private Sprite duringCallSprite;
     [SerializeField] private Sprite successSprite;
     [SerializeField] private Sprite failureSprite;
@@ -12,33 +14,45 @@ public class ScrollingBackground : MonoBehaviour
     [Range(0.01f, 1.0f)]
     [SerializeField] private float scrollSpeed = 0.2f;
     [Range(0, 360)]
-    [SerializeField] private float scrollAngle = 335.0f; // 335 degrees = -25 degrees
+    [SerializeField] private float scrollAngle = 335.0f;
     
     [Header("Tiling Settings")]
     [Range(0.05f, 2.0f)]
-    [SerializeField] private float tileScale = 0.5f; // Adjust to change tile size
+    [SerializeField] private float tileScale = 0.5f;
     
     [Header("References")]
     [SerializeField] private RawImage backgroundImage;
+    
+    // Scene names to check against
+    private readonly string startSceneName = "StartInstructionScene";
+    private readonly string gameOverSceneName = "GameOverScene";
     
     private Vector2 uvOffset = Vector2.zero;
     private Vector2 scrollDirection;
     private bool isScrollingUp = true;
     
-    private enum BackgroundState { DuringCall, Success, Failure }
-    private BackgroundState currentState = BackgroundState.DuringCall;
+    private enum BackgroundState { Background, DuringCall, Success, Failure }
+    private BackgroundState currentState = BackgroundState.Background;
     
     private void Start()
     {
         // Calculate scroll direction based on angle
         UpdateScrollDirection();
         
-        // Set initial background
-        SetBackground(BackgroundState.DuringCall);
+        // Auto-detect current scene and set appropriate background
+        string currentScene = SceneManager.GetActiveScene().name;
         
-        // Debug info
-        Debug.Log($"ScrollingBackground initialized on {gameObject.name}");
-        Debug.Log($"Tile scale: {tileScale}, Scroll angle: {scrollAngle}°");
+        if (currentScene == startSceneName || currentScene == gameOverSceneName)
+        {
+            // Start and GameOver scenes use the standard background
+            SetBackground(BackgroundState.Background);
+            Debug.Log($"ScrollingBackground: Using dedicated background sprite for {currentScene}");
+        }
+        else
+        {
+            // Game scene - set initial background (will be updated by game logic)
+            SetBackground(BackgroundState.DuringCall);
+        }
     }
     
     private void Update()
@@ -52,7 +66,7 @@ public class ScrollingBackground : MonoBehaviour
         // Update UV offset based on direction and speed
         if (isScrollingUp)
         {
-            // Move in the calculated direction (for call and success)
+            // Move in the calculated direction (for background, call and success)
             uvOffset += scrollDirection * (scrollSpeed * Time.deltaTime);
         }
         else
@@ -73,8 +87,6 @@ public class ScrollingBackground : MonoBehaviour
         
         // Calculate direction using sine and cosine
         scrollDirection = new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)).normalized;
-        
-        Debug.Log($"Updated scroll direction to {scrollDirection} based on angle {scrollAngle}°");
     }
     
     // Call this from Inspector when the angle is changed
@@ -86,10 +98,13 @@ public class ScrollingBackground : MonoBehaviour
     // Call this from your panel manager when state changes
     public void SetState(string state)
     {
-        Debug.Log($"Setting background state to: {state} on {gameObject.name}");
-        
         switch (state.ToLower())
         {
+            case "background":
+                SetBackground(BackgroundState.Background);
+                isScrollingUp = true;
+                break;
+                
             case "call":
             case "duringcall":
                 SetBackground(BackgroundState.DuringCall);
@@ -125,6 +140,10 @@ public class ScrollingBackground : MonoBehaviour
         
         switch (state)
         {
+            case BackgroundState.Background:
+                spriteToUse = backgroundSprite;
+                break;
+                
             case BackgroundState.DuringCall:
                 spriteToUse = duringCallSprite;
                 break;
@@ -143,7 +162,6 @@ public class ScrollingBackground : MonoBehaviour
         {
             backgroundImage.texture = spriteToUse.texture;
             backgroundImage.color = Color.white; // Ensure color is set to white
-            Debug.Log($"Set background texture to {spriteToUse.name} on {gameObject.name}");
         }
         else
         {
@@ -155,14 +173,12 @@ public class ScrollingBackground : MonoBehaviour
     public void SetTileScale(float newScale)
     {
         tileScale = Mathf.Clamp(newScale, 0.05f, 2.0f);
-        Debug.Log($"Updated tile scale to {tileScale}");
     }
     
     // Add this to make scroll speed adjustable at runtime
     public void SetScrollSpeed(float newSpeed)
     {
         scrollSpeed = Mathf.Clamp(newSpeed, 0.01f, 1.0f);
-        Debug.Log($"Updated scroll speed to {scrollSpeed}");
     }
     
     // Add this to make scroll angle adjustable at runtime
@@ -171,17 +187,4 @@ public class ScrollingBackground : MonoBehaviour
         scrollAngle = newAngle % 360f; // Keep within 0-360 range
         UpdateScrollDirection();
     }
-    
-    // Add test buttons for Inspector debugging
-    [ContextMenu("Test DuringCall State")]
-    public void TestDuringCallState() => SetState("duringcall");
-    
-    [ContextMenu("Test Success State")]
-    public void TestSuccessState() => SetState("success");
-    
-    [ContextMenu("Test Failure State")]
-    public void TestFailureState() => SetState("failure");
-    
-    [ContextMenu("Reset UV Offset")]
-    public void ResetUVOffset() => uvOffset = Vector2.zero;
 }

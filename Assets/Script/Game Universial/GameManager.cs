@@ -46,6 +46,12 @@ public class GameManager : MonoBehaviour
 	[SerializeField] private TMP_Text leftReminderText;
 	[SerializeField] private TMP_Text rightReminderText;
 
+    [Header("Call Info manager")]
+    [SerializeField] private IncomingCallInfoManager callInfoManager;
+    
+    [Header("Phone Effect")]
+    [SerializeField] private PhoneEffects phoneEffects;
+
 	private bool redButtonPressedOnce = false;
     
     private int callCount = 0;
@@ -198,6 +204,10 @@ public class GameManager : MonoBehaviour
         UpdateCallCountDisplay();
         UpdateScoreDisplay();
         
+        // Generate a new random caller name
+        if (callInfoManager != null)
+        callInfoManager.GenerateRandomCallerName();
+        
         // Generate new faces for this call using the new system
         if (faceGenerator != null)
         {
@@ -214,6 +224,12 @@ public class GameManager : MonoBehaviour
         
         // Show incoming call UI
         panelManager.ShowIncomingCallPanel();
+        // Start phone vibration effect
+        if (phoneEffects != null)
+        {
+            phoneEffects.ResetAllPanels();
+            phoneEffects.StartVibrationEffect();
+        }
 		
 		soundManager.PlayIncomingRingtone();
         
@@ -277,6 +293,15 @@ public class GameManager : MonoBehaviour
         // Start the call timer
         callActive = true;
         currentCallTime = callDuration;
+        
+        // Stop vibration and start face bobbing
+        if (phoneEffects != null)
+        {
+            // Stop vibration
+            phoneEffects.ResetAllPanels();
+            // Start face panel bobbing
+            phoneEffects.StartFacePanelBobbing();
+        }
         
         // Configure input for call phase
         inputManager.SetCallActive(true);

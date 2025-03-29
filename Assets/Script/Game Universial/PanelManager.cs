@@ -45,6 +45,7 @@ public class PanelManager : MonoBehaviour
     [Header("ScrollingBackground Controllers")]
     [SerializeField] private ScrollingBackground backgroundControllerLeft;
     [SerializeField] private ScrollingBackground backgroundControllerRight;
+	
     
     // Show incoming call screen
     public void ShowIncomingCallPanel()
@@ -60,6 +61,7 @@ public class PanelManager : MonoBehaviour
             backgroundControllerLeft.SetState("duringcall");
         if (backgroundControllerRight != null)
             backgroundControllerRight.SetState("duringcall");
+		
     }
     
     // Show active call screen
@@ -76,6 +78,7 @@ public class PanelManager : MonoBehaviour
             backgroundControllerLeft.SetState("duringcall");
         if (backgroundControllerRight != null)
             backgroundControllerRight.SetState("duringcall");
+		
     }
     
     // Show result panel

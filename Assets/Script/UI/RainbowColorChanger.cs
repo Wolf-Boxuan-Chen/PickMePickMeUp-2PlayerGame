@@ -9,8 +9,8 @@ public class RainbowColorChanger : MonoBehaviour
     [SerializeField] private Image rightMonitorImage;
     
     [Header("Color Settings")]
-    [SerializeField] private float colorChangeSpeed = 1.0f;
-    [SerializeField] private bool useCustomColors = true;
+    [SerializeField] private float colorChangeSpeed = 4f;
+    [SerializeField] private float saturationMultiplier = 1f;
     
     // The custom colors you provided
     private List<Color> customColors = new List<Color>();
@@ -23,7 +23,7 @@ public class RainbowColorChanger : MonoBehaviour
     void Start()
     {
         // Find game manager
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
         
         // Add your custom colors (from the hex values you provided)
         AddCustomColors();
@@ -31,7 +31,7 @@ public class RainbowColorChanger : MonoBehaviour
     
     void Update()
     {
-        // Only update during incoming call
+        // Check if we can access the incoming call state
         if (IsIncomingCallActive())
         {
             UpdateColors();
@@ -41,15 +41,15 @@ public class RainbowColorChanger : MonoBehaviour
     private void AddCustomColors()
     {
         // Add the colors from your set (less saturated versions)
-        customColors.Add(HexToColor("FF5F5F", 0.8f)); // Red
-        customColors.Add(HexToColor("FFC75F", 0.8f)); // Orange
-        customColors.Add(HexToColor("DCFF5F", 0.8f)); // Yellow-green
-        customColors.Add(HexToColor("74FF5F", 0.8f)); // Green
-        customColors.Add(HexToColor("5FFFB4", 0.8f)); // Teal
-        customColors.Add(HexToColor("5FC2FF", 0.8f)); // Blue
-        customColors.Add(HexToColor("7F5FFF", 0.8f)); // Purple
-        customColors.Add(HexToColor("FF5FFA", 0.8f)); // Pink
-        customColors.Add(HexToColor("FF5F7C", 0.8f)); // Red-pink
+        customColors.Add(HexToColor("FF5F5F", saturationMultiplier)); // Red
+        customColors.Add(HexToColor("FFC75F", saturationMultiplier)); // Orange
+        customColors.Add(HexToColor("DCFF5F", saturationMultiplier)); // Yellow-green
+        customColors.Add(HexToColor("74FF5F", saturationMultiplier)); // Green
+        customColors.Add(HexToColor("5FFFBA", saturationMultiplier)); // Teal
+        customColors.Add(HexToColor("5FBAFF", saturationMultiplier)); // Blue
+        customColors.Add(HexToColor("8C5FFF", saturationMultiplier)); // Purple
+        //customColors.Add(HexToColor("FF5FCC", saturationMultiplier)); // Pink
+        //customColors.Add(HexToColor("FF5F7C", saturationMultiplier)); // Red-pink
     }
     
     private void UpdateColors()
@@ -88,20 +88,47 @@ public class RainbowColorChanger : MonoBehaviour
     // Helper method to check if incoming call is active
     private bool IsIncomingCallActive()
     {
-        // You may need to modify this based on your actual game state tracking
-        // This is a placeholder implementation
-        
-        // Option 1: Using callActive state in GameManager (if accessible)
+        // Modified to use direct field access to match your GameManager structure
         if (gameManager != null)
-            return !gameManager.IsCallActive() && !gameManager.IsResultActive();
+        {
+            // Check if we're in the incoming call state
+            // Assuming the call is incoming when callActive is false and resultActive is false
+            bool incomingActive = false;
             
-        // Option 2: Checking if the incoming call panel is active
-        // This would need references to those panels
+            // Use reflection to safely access private fields
+            System.Reflection.FieldInfo callActiveField = typeof(GameManager).GetField("callActive", 
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                
+            System.Reflection.FieldInfo resultActiveField = typeof(GameManager).GetField("resultActive", 
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                
+            if (callActiveField != null && resultActiveField != null)
+            {
+                bool isCallActive = (bool)callActiveField.GetValue(gameManager);
+                bool isResultActive = (bool)resultActiveField.GetValue(gameManager);
+                
+                // Incoming call is active when neither call nor result is active
+                incomingActive = !isCallActive && !isResultActive;
+                
+                //Debug.Log($"Call active: {isCallActive}, Result active: {isResultActive}, Incoming: {incomingActive}");
+            }
+            else
+            {
+                Debug.LogWarning("Could not access GameManager state fields");
+            }
+            
+            return incomingActive;
+        }
+        
+        // Alternative: Check if the incoming call panel is active
+        // If you have references to the panels, you could check:
+        // return incomingCallPanelLeft.activeSelf && incomingCallPanelRight.activeSelf;
+        
         return true; // Default fallback
     }
     
     // Helper method to convert hex color to Unity Color
-    private Color HexToColor(string hex, float saturationMultiplier = 1.0f)
+    private Color HexToColor(string hex, float satMult = 1.0f)
     {
         // Remove # if present
         if (hex.StartsWith("#"))
@@ -116,7 +143,7 @@ public class RainbowColorChanger : MonoBehaviour
         Color.RGBToHSV(new Color(r, g, b), out float h, out float s, out float v);
         
         // Apply saturation multiplier
-        s *= saturationMultiplier;
+        s *= satMult;
         
         // Convert back to RGB
         return Color.HSVToRGB(h, s, v);

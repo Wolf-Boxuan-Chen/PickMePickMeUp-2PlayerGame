@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 66993530907f8410c8488e77f2636901
+guid: 2811809a72b1c4d5fb85d4a6f9fb162f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6057404424670450312
-    second: Start Screen 5_0
+      213: -2933490765244799215
+    second: BG_BasicIcon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -24,7 +24,7 @@ TextureImporter:
     heightScale: 0.25
     normalMapFilter: 0
     flipGreenChannel: 0
-  isReadable: 0
+  isReadable: 1
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
@@ -40,9 +40,9 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Start Screen 5_0
+      name: BG_BasicIcon_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1800
-        height: 3200
+        width: 877
+        height: 889
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 87d63aee4c6cfeba0800000000000000
-      internalID: -6057404424670450312
+      spriteID: 117e1b9f0b52a47d0800000000000000
+      internalID: -2933490765244799215
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Start Screen 5_0: -6057404424670450312
+      BG_BasicIcon_0: -2933490765244799215
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
