@@ -37,13 +37,31 @@ public class StartScreenManager : MonoBehaviour
             
         // Show title screen initially
         ShowTitleScreen();
+		// IMPORTANT: Update SoundManager reference retrieval
+    	// Try to get the persistent SoundManager instance first
+    	// SoundManager handling - critical fix
+    	soundManager = SoundManager.Instance; // Try to get the persisted instance first
+    
+    	// If no instance found, we need to create a new SoundManager
+    	if (soundManager == null)
+    	{
+        	Debug.Log("No SoundManager instance found - creating a new one");
         
-        // Make sure we have a reference to the SoundManager
-        if (soundManager == null)
-            soundManager = SoundManager.Instance;
+        	// Look for an inactive SoundManager prefab in the scene
+        	GameObject soundManagerObj = GameObject.Find("SoundManager");
         
-        // Play start screen music
-        soundManager.PlayStartScreenBGM();
+        	// Make sure we have a reference to the SoundManager
+			if (soundManager == null)
+    			soundManager = SoundManager.Instance;
+    
+			// Play end screen music
+			soundManager.PlayEndScreenBGM();	
+    	}
+    	else
+    	{
+        	Debug.Log("Found existing SoundManager instance");
+        	soundManager.PlayStartScreenBGM(); // Start the music immediately
+    	}
     }
     
     private void Update()
@@ -243,7 +261,25 @@ public class StartScreenManager : MonoBehaviour
     {
         Debug.Log("FORCING GAME START: " + gameSceneName);
         soundManager.StopAll();
-        SceneManager.LoadScene(gameSceneName);
+        SceneManager.LoadScene("GameScene");
     }
+		
+
+	private IEnumerator WaitForSoundManagerInit()
+	{
+    	// Wait a frame to ensure the SoundManager has time to initialize
+    	yield return null;
+    
+    	// Now play the music
+    	if (soundManager != null)
+    	{
+        	Debug.Log("Starting music after SoundManager creation");
+        	soundManager.PlayStartScreenBGM();
+    	}	
+    	else
+    	{
+        	Debug.LogError("SoundManager reference lost after creation!");
+    	}
+	}
     
 }

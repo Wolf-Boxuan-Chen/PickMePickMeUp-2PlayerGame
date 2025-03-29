@@ -7730,7 +7730,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hang up ig you spot a scam!
+  m_text: Don't look back! Communicate to see if they look different!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: da0c7eb3a666f45a5bba2dbac36fe64f, type: 2}
   m_sharedMaterial: {fileID: 6610489389899232224, guid: da0c7eb3a666f45a5bba2dbac36fe64f, type: 2}
@@ -7757,8 +7757,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.2
-  m_fontSizeBase: 37.2
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -7795,7 +7795,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -245.46362, y: 0, z: -245.46356, w: 0}
+  m_margin: {x: -261.1339, y: 0, z: -259.79755, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -9324,7 +9324,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hang up if you spot a scam!
+  m_text: Don't look back! Communicate to see if they look different!
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: da0c7eb3a666f45a5bba2dbac36fe64f, type: 2}
   m_sharedMaterial: {fileID: 6610489389899232224, guid: da0c7eb3a666f45a5bba2dbac36fe64f, type: 2}
@@ -9351,8 +9351,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 37.2
-  m_fontSizeBase: 37.2
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

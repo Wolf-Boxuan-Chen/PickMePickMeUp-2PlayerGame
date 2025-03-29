@@ -491,4 +491,22 @@ public class SoundManager : MonoBehaviour
         
         Debug.Log($"TEST: Set master volume to {masterVolume}");
     }
+		
+	public static SoundManager GetOrCreateInstance()
+	{
+    	if (Instance != null)
+        	return Instance;
+        
+    	// Try to find an existing SoundManager in the scene
+    	SoundManager manager = FindObjectOfType<SoundManager>();
+    
+    	if (manager != null)
+        	return manager;
+        
+    	// No SoundManager exists - create one
+    	GameObject newObj = new GameObject("SoundManager");
+    	manager = newObj.AddComponent<SoundManager>();
+    
+    	return manager;
+	}
 }

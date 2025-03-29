@@ -87,11 +87,13 @@ public class GameOverManager : MonoBehaviour
         StartCoroutine(WaitForRestartInput());
 		
 		// Make sure we have a reference to the SoundManager
-    	if (soundManager == null)
-        	soundManager = SoundManager.Instance;
-        
-    	// Play end screen music
-    	soundManager.PlayEndScreenBGM();
+    	soundManager = SoundManager.Instance;
+    	// Make sure we have a reference to the SoundManager
+		if (soundManager == null)
+    		soundManager = SoundManager.Instance;
+
+		// Play start screen music
+		soundManager.PlayStartScreenBGM();
     }
     
     private void ShowGameOverPanel()
